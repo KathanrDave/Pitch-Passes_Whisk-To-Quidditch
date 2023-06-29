@@ -36,7 +36,6 @@ export default function SignIn() {
           <div class="form-container sign-up-container">
             <Box action="#">
               <Typography variant="h1">Create Account</Typography>
-
               <box class="social-container">
                 <Icon color="primary">
                   {" "}
