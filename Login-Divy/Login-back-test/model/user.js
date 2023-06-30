@@ -54,6 +54,13 @@ const registerSchema = new mongoose.Schema({
     required: true,
     
   },
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  token:{
+
+  }
 });
 
 // Create a Login model from the schema

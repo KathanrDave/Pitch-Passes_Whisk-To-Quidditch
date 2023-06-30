@@ -46,18 +46,20 @@ app.post("/register", async (req, res) => {
     if (existsUser) {
       res.status(401).send("User Already Exists");
     }
+
+   const checkUser=(password===confirmPassword);
+
     // encrypting the password
     const myEncPassword = await bcrypt.hash(password, 10);
     // encrypting the confirmPassword
     const hashedPassword = await bcrypt.hash(confirmPassword, 10);
     // check the password and confirmPassword
-    const checkUser = await bcrypt.compare(myEncPassword, hashedPassword);
 
     // Regular expression for Indian mobile number validation
     const indianMobileNumberRegex = /^[6-9]\d{9}$/;
 
     // Function to validate Indian mobile number
-   const checkNumber = function validateIndianMobileNumber(mobileNumber) {
+   const checkNumber =  function validateIndianMobileNumber(mobileNumber) {
       return indianMobileNumberRegex.test(mobileNumber);
     }
       // TO check the validation of the phone number 
@@ -65,7 +67,7 @@ app.post("/register", async (req, res) => {
      {
         res.status(400).send("Invalid Phone Number");
      }
-    if (checkUser) {
+    if (checkUser && checkNumber) {
       // save the user in the Database
       const user = await User.create({
         firstName: firstName,
@@ -106,7 +108,7 @@ app.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     } else {
-      const checkUser = await bcrypt.compare(user.password, password);
+        const checkUser = await bcrypt.compare(password,user.password);
       if (checkUser) {
         // generating a web token
         const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
@@ -126,6 +128,7 @@ app.post("/login", async (req, res) => {
           sucess: true,
           token,
           user,
+          message:"User login sucessful"
         });
       } else {
         return res.status(404).json({ error: "Invalid Password" });
