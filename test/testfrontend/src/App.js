@@ -12,11 +12,31 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import FacebookSharpIcon from '@mui/icons-material/FacebookSharp';
+import FacebookSharpIcon from "@mui/icons-material/FacebookSharp";
 import GoogleIcon from "@mui/icons-material/Google";
-import { Icon } from "@mui/material";
 // TODO remove, this demo shouldn't need to reset the theme.
-
+import {
+  amber,
+  blue,
+  blueGrey,
+  brown,
+  common,
+  cyan,
+  deepOrange,
+  deepPurple,
+  green,
+  grey,
+  indigo,
+  lightBlue,
+  lightGreen,
+  lime,
+  orange,
+  pink,
+  purple,
+  red,
+  teal,
+  yellow,
+} from "@mui/material/colors";
 const defaultTheme = createTheme();
 
 export default function SignIn() {
@@ -35,25 +55,82 @@ export default function SignIn() {
         <div class="container" id="container">
           <div class="form-container sign-up-container">
             <Box action="#">
-              <Typography variant="h1">Create Account</Typography>
+              <Typography variant="h3">Create Account</Typography>
               <box class="social-container">
-                <Icon color="primary">
-                  {" "}
-                  <Link href="#">FacebookSharp </Link>
-                </Icon>
-
-                <Link href="#">
-                  <Icon>Google</Icon>
+                <Link href="https://www.facebook.com/" target="_blank">
+                  <FacebookSharpIcon></FacebookSharpIcon>
+                </Link>
+                <Link href="https://www.google.com" target="_blank">
+                  <GoogleIcon sx={{ color: grey[700] }} />
                 </Link>
               </box>
+              <Box
+                sx={{
+                  marginTop: 8,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+              
+                <Typography component="h1" variant="h5">
+                  Sign in
+                </Typography>
+                <Box
+                  component="form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  sx={{ mt: 1 }}
+                >
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Remember me"
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    <Grid item xs>
+                      <Link href="#" variant="body2">
+                        Forgot password?
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link href="#" variant="body2">
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Box>
             </Box>
-
-            <span>or use your email for registration</span>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up</button>
           </div>
+
           <div class="form-container sign-in-container">
             <form action="#">
               <h1>Sign in</h1>
