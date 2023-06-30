@@ -16,7 +16,7 @@ app.get("/",(req, res) => {
 
 app.post("/register",async (req,res) => {
  try{
-
+  const {firstName,lastName,email,password,confirmPassword} = req.body
  }
 catch(error)
 {

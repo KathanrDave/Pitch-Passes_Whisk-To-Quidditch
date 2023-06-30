@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 // Define the login schema
+const passwordValidator = require("password-validator");
 const registerSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   email: {
     type: String,
     required: true,
@@ -15,7 +26,43 @@ const registerSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8
+    minlength: 8,
+    validate: {
+      validator: function (value) {
+        const schema = new passwordValidator();
+        schema
+          .is().min(8)
+          .is().max(100)
+          .has().uppercase()
+          .has().lowercase()
+          .has().digits()
+          .has().symbols()
+          .has().not().spaces();
+
+        return schema.validate(value);
+      },
+      message: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one symbol'
+    }
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value === this.password;
+      },
+      message: 'Passwords do not match'
+    }
+  },
+  mobileNumber: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return /^\d{10}$/.test(value);
+      },
+      message: "Please enter a valid 10-digit mobile number",
+    },
   },
 });
 
