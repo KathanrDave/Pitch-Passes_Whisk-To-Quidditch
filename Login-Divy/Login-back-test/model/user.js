@@ -47,22 +47,12 @@ const registerSchema = new mongoose.Schema({
   confirmPassword: {
     type: String,
     required: true,
-    validate: {
-      validator: function (value) {
-        return value === this.password;
-      },
-      message: 'Passwords do not match'
-    }
+   
   },
   mobileNumber: {
     type: String,
     required: true,
-    validate: {
-      validator: function (value) {
-        return /^\d{10}$/.test(value);
-      },
-      message: "Please enter a valid 10-digit mobile number",
-    },
+    
   },
 });
 
