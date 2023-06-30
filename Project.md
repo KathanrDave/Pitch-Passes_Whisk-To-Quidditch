@@ -1,3 +1,2 @@
 Notion - 
 Figam - 
-Discord - 
