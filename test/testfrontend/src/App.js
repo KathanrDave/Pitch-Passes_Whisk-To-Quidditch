@@ -1,249 +1,130 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import FacebookSharpIcon from "@mui/icons-material/FacebookSharp";
-import GoogleIcon from "@mui/icons-material/Google";
-// TODO remove, this demo shouldn't need to reset the theme.
-import {
-  amber,
-  blue,
-  blueGrey,
-  brown,
-  common,
-  cyan,
-  deepOrange,
-  deepPurple,
-  green,
-  grey,
-  indigo,
-  lightBlue,
-  lightGreen,
-  lime,
-  orange,
-  pink,
-  purple,
-  red,
-  teal,
-  yellow,
-} from "@mui/material/colors";
-const defaultTheme = createTheme();
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { grey, red } from "@mui/material/colors";
+import { Button, Grid, Theme } from "@mui/material";
 
-export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+export default function SlideFromContainer() {
+  const [isSignInActive, setIsSignInActive] = React.useState(false);
+  const containerRef = React.useRef(null);
+
+  const handleSignUpClick = () => {
+    setIsSignInActive(false);
+  };
+
+  const handleSignInClick = () => {
+    setIsSignInActive(true);
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container>
-        <div class="container" id="container">
-          <div class="form-container sign-up-container">
-            <Box action="#">
-              <Typography variant="h3">Create Account</Typography>
-              <box class="social-container">
-                <Link href="https://www.facebook.com/" target="_blank">
-                  <FacebookSharpIcon></FacebookSharpIcon>
-                </Link>
-                <Link href="https://www.google.com" target="_blank">
-                  <GoogleIcon sx={{ color: grey[700] }} />
-                </Link>
-              </box>
-              <Box
-                sx={{
-                  marginTop: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-              
-                <Typography component="h1" variant="h5">
-                  Sign in
-                </Typography>
-                <Box
-                  component="form"
-                  onSubmit={handleSubmit}
-                  noValidate
-                  sx={{ mt: 1 }}
-                >
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                  />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Sign In
-                  </Button>
-                  <Grid container>
-                    <Grid item xs>
-                      <Link href="#" variant="body2">
-                        Forgot password?
-                      </Link>
-                    </Grid>
-                    <Grid item>
-                      <Link href="#" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Box>
-            </Box>
-          </div>
+    <Box>
+      <Box
+        sx={{
+          bgcolor: grey[50],
+          borderRadius: 5,
+          boxShadow: 10,
 
-          <div class="form-container sign-in-container">
-            <form action="#">
-              <h1>Sign in</h1>
-              <div class="social-container">
-                <Link href="#" class="social">
-                  <i class="fab fa-facebook-f"></i>
-                </Link>
-                <Link href="#" class="social">
-                  <i class="fab fa-google-plus-g"></i>
-                </Link>
-                <Link href="#" class="social">
-                  <i class="fab fa-linkedin-in"></i>
-                </Link>
-              </div>
-              <span>or use your account</span>
-              <input type="email" placeholder="Email" />
-              <input type="password" placeholder="Password" />
-              <a href="#">Forgot your password?</a>
-              <button>Sign In</button>
-            </form>
-          </div>
-          <div class="overlay-container">
-            <div class="overlay">
-              <div class="overlay-panel overlay-left">
-                <h1>Welcome Back!</h1>
-                <p>
-                  To keep connected with us please login with your personal info
-                </p>
-                <button class="ghost" id="signIn">
-                  Sign In
-                </button>
-              </div>
-              <div class="overlay-panel overlay-right">
-                <h1>Hello, Friend!</h1>
-                <p>Enter your personal details and start journey with us</p>
-                <button class="ghost" id="signUp">
-                  Sign Up
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          mx: "auto",
+          mt: "2.5%",
+          mb: "2.5%",
 
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
+          height: 600,
+          width: "60%",
+
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            height: "100%",
+            width: "50%",
+            zIndex: "1502",
+          }}
+        >
+          <Grid
             sx={{
-              marginTop: 8,
+              position: "absolute",
+              height: "100%",
               display: "flex",
+              width: "100%",
               flexDirection: "column",
+              justifyContent: "center",
               alignItems: "center",
+              bgcolor: grey[200],
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-            </Box>
+            Sign In
+          </Grid>
+        </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            height: "100%",
+            width: "50%",
+            zIndex: "1503",
+          }}
+        >
+          <Grid
+            sx={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              bgcolor: grey[500],
+              opacity: 0,
+            }}
+          >
+            Sign Up
+          </Grid>
+        </Box>
+        <Box
+          sx={{
+            bgcolor: red[300],
+            position: "relative",
+            width: "200%",
+            overflow: "hidden",
+            height: "100%",
+            left: "-100%",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              top: 0,
+              height: "100%",
+              width: "50%",
+            }}
+          >
+            <Button>Sign In Button</Button>
           </Box>
-        </Container>
-      </Container>
-    </ThemeProvider>
+          <Box
+            sx={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              top: 0,
+              height: "100%",
+              width: "50%",
+              right: 0,
+            }}
+          >
+            <Button onClick={handleSignUpClick}>Sign Up Button</Button>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
