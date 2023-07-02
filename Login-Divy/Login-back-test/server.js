@@ -5,19 +5,26 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 // connection with the mongoose database
+require("./googleAuth");
+const passport = require("passport");
+const session = require("express-session");
 
+const User = require("./model/user");
+const app = express();
+// middleware
+app.use(express.json());
+app.use(cookieParser());
+
+// Mongo Db connection
 main().catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URL);
 }
+// const express = require('express');
+// const session = require('express-session');
 
-// middleware
-const User = require("./model/user");
-const app = express();
-app.use(express.json());
-app.use(cookieParser());
-
+// registering the user 
 app.post("/register", async (req, res) => {
   try {
     const {
@@ -35,8 +42,7 @@ app.post("/register", async (req, res) => {
         lastName &&
         email &&
         password &&
-        confirmPassword &&
-        mobileNumber
+        confirmPassword
       )
     ) {
       res.status(400).send("All fields are mandatory");
@@ -47,7 +53,7 @@ app.post("/register", async (req, res) => {
       res.status(401).send("User Already Exists");
     }
 
-   const checkUser=(password===confirmPassword);
+    const checkUser = password === confirmPassword;
 
     // encrypting the password
     const myEncPassword = await bcrypt.hash(password, 10);
@@ -59,14 +65,13 @@ app.post("/register", async (req, res) => {
     const indianMobileNumberRegex = /^[6-9]\d{9}$/;
 
     // Function to validate Indian mobile number
-   const checkNumber =  function validateIndianMobileNumber(mobileNumber) {
+    const checkNumber = function validateIndianMobileNumber(mobileNumber) {
       return indianMobileNumberRegex.test(mobileNumber);
+    };
+    // TO check the validation of the phone number
+    if (!checkNumber) {
+      res.status(400).send("Invalid Phone Number");
     }
-      // TO check the validation of the phone number 
-     if(!checkNumber)
-     {
-        res.status(400).send("Invalid Phone Number");
-     }
     if (checkUser && checkNumber) {
       // save the user in the Database
       const user = await User.create({
@@ -96,7 +101,30 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+// Function to check whether the user is admin or just user
+function authorizeAdmin(req, res, next) {
+  const userRole = req.body.role;
+  console.log(userRole);
+  let redirectUrl = '/userdashboard';  // Default redirect URL for non-admin users
+
+  if (userRole === 'admin') {
+    redirectUrl = '/admindashboard';  // Redirect URL for admin users
+  }
+
+  res.redirect(redirectUrl);
+}
+
+
+app.post('/userdashboard', async (req, res) => {
+  res.send('Welcome User');
+});
+
+app.post('/admindashboard', async (req, res) => {
+  res.send('Welcome Admin');
+});
+
+
+app.post("/login",async (req, res) => {
   try {
     //get the data from the frontend
     const { email, password } = req.body;
@@ -108,7 +136,7 @@ app.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     } else {
-        const checkUser = await bcrypt.compare(password,user.password);
+      const checkUser = await bcrypt.compare(password, user.password);
       if (checkUser) {
         // generating a web token
         const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
@@ -124,13 +152,18 @@ app.post("/login", async (req, res) => {
           secure: true,
           sameSite: "Strict", //  It can help mitigate certain types of cross-site request forgery (CSRF) attacks
         };
-        res.status(200).cookie("token", token, options).json({
-          sucess: true,
-          token,
-          user,
-          message:"User login sucessful"
-        });
-      } else {
+
+        // res.status(200).cookie("token", token, options).json({
+        //   sucess: true,
+        //   token,
+        //   user,
+        //   message: "User login sucessful",
+        // });
+        if (user.role !== "admin") {
+          res.redirect('/userdashboard');
+        } else {
+          res.redirect('/admindashboard');
+      }} else {
         return res.status(404).json({ error: "Invalid Password" });
       }
     }

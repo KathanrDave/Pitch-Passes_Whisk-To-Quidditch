@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 // Define the login schema
 const passwordValidator = require("password-validator");
 const registerSchema = new mongoose.Schema({
@@ -51,15 +52,17 @@ const registerSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true,
-    
   },
   created: {
     type: Date,
     default: Date.now
   },
+  role: {
+    type: String,
+    default: 'user'
+  },
   token:{
-
+    
   }
 });
 
