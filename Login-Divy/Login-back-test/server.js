@@ -1,14 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
-require("dotenv").config();
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-// connection with the mongoose database
-require("./googleAuth");
 const passport = require("passport");
 const session = require("express-session");
 
+// connection with the mongoose database
+require("./googleAuth");
+
+require("dotenv").config();
 const User = require("./model/user");
 const app = express();
 // middleware
@@ -24,7 +25,7 @@ async function main() {
 // const express = require('express');
 // const session = require('express-session');
 
-// registering the user 
+// registering the user
 app.post("/register", async (req, res) => {
   try {
     const {
@@ -36,15 +37,7 @@ app.post("/register", async (req, res) => {
       mobileNumber,
     } = req.body;
     // All the fields are mandatory
-    if (
-      !(
-        firstName &&
-        lastName &&
-        email &&
-        password &&
-        confirmPassword
-      )
-    ) {
+    if (!(firstName && lastName && email && password && confirmPassword)) {
       res.status(400).send("All fields are mandatory");
     }
     // Check if the user already exists
@@ -105,26 +98,24 @@ app.post("/register", async (req, res) => {
 function authorizeAdmin(req, res, next) {
   const userRole = req.body.role;
   console.log(userRole);
-  let redirectUrl = '/userdashboard';  // Default redirect URL for non-admin users
+  let redirectUrl = "/userdashboard"; // Default redirect URL for non-admin users
 
-  if (userRole === 'admin') {
-    redirectUrl = '/admindashboard';  // Redirect URL for admin users
+  if (userRole === "admin") {
+    redirectUrl = "/admindashboard"; // Redirect URL for admin users
   }
 
   res.redirect(redirectUrl);
 }
 
-
-app.post('/userdashboard', async (req, res) => {
-  res.send('Welcome User');
+app.post("/userdashboard", async (req, res) => {
+  res.send("Welcome User");
 });
 
-app.post('/admindashboard', async (req, res) => {
-  res.send('Welcome Admin');
+app.post("/admindashboard", async (req, res) => {
+  res.send("Welcome Admin");
 });
 
-
-app.post("/login",async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
     //get the data from the frontend
     const { email, password } = req.body;
@@ -160,10 +151,11 @@ app.post("/login",async (req, res) => {
         //   message: "User login sucessful",
         // });
         if (user.role !== "admin") {
-          res.redirect('/userdashboard');
+          res.redirect("/userdashboard");
         } else {
-          res.redirect('/admindashboard');
-      }} else {
+          res.redirect("/admindashboard");
+        }
+      } else {
         return res.status(404).json({ error: "Invalid Password" });
       }
     }
