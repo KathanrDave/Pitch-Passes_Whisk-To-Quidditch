@@ -94,23 +94,12 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Function to check whether the user is admin or just user
-function authorizeAdmin(req, res, next) {
-  const userRole = req.body.role;
-  console.log(userRole);
-  let redirectUrl = "/userdashboard"; // Default redirect URL for non-admin users
 
-  if (userRole === "admin") {
-    redirectUrl = "/admindashboard"; // Redirect URL for admin users
-  }
-
-  res.redirect(redirectUrl);
-}
 
 app.post("/userdashboard", async (req, res) => {
   res.send("Welcome User");
 });
-
+  
 app.post("/admindashboard", async (req, res) => {
   res.send("Welcome Admin");
 });
