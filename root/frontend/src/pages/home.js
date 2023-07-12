@@ -9,6 +9,10 @@ export default function signup() {
       <br></br>
       <a href="/auth/signup">signup</a>
       <br></br>
+      <a href="/user/completeprofile">completeprofile</a>
+      <br></br>
+      <a href="/user/profile">user profile</a>
+      <br></br>
     </div>
   );
 }
