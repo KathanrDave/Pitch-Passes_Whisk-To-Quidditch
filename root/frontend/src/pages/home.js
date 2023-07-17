@@ -13,6 +13,8 @@ export default function signup() {
       <br></br>
       <a href="/user/profile">user profile</a>
       <br></br>
+      <a href="/homepage">home page</a>
+      <br></br>
     </div>
   );
 }
