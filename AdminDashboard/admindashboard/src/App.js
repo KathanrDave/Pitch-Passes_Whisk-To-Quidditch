@@ -14,6 +14,7 @@ function App() {
     <div className="App">
       <Routes>
           <Route path="/" element={<MatchDisplay />} />
+          <Route path="/" element={<AddEvents />} />
         <Route path="/book-tickets/64a55f28de73098269e32abd" element={<BookTickets />} />
         <Route path="/admin/addseats" element={<AddSeats/>}/>
         <Route path="/user/booktickets" element={<UserSeatBook/>}/>
