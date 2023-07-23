@@ -30,7 +30,7 @@ export default function MatchShow() {
   };
 
   // Memoize the matchTab object to avoid unnecessary re-creation
-  const matchTab = React.useMemo(() => {
+ const matchTab = React.useMemo(() => {
     return {
       id: "64a55f28de73098269e32abd",
       // other properties...

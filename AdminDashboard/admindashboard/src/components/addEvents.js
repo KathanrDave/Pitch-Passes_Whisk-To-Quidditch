@@ -6,11 +6,11 @@ export default function AddEvents() {
   const navigate = useNavigate();
   const [buttonVisible, setButtonVisible] = useState(true);
 
-  const handleAddEventsClick = () => {
+  const handleAddEventsClick = async  () => {
     navigate('/admin/addeventdetails');
     setButtonVisible(false);
   };
-
+  
   return (
     <Box>
       {buttonVisible && (

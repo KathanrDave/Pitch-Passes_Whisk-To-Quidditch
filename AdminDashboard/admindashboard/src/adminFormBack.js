@@ -1,4 +1,5 @@
 // backend/server.js
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -8,7 +9,8 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const User = require("./model/user");
-const matchData = require("./model/match");
+const Seat=require("./model/seatModel");
+const matchData = require("./model/matchModel");
 const cors = require("cors");
 
 // Enable CORS for all routes
@@ -129,7 +131,7 @@ app.post("/admin/addeventdetails", async (req, res) => {
 });
 
 
-app.get(`/admin/update`, async (req, res) => {
+app.get(`/admin/extractdetails`, async (req, res) => {
   try {
     const matchId = req.query.matchId;
     const existingMatch = await matchData.findOne({ _id: matchId });
@@ -147,6 +149,96 @@ app.get(`/admin/update`, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+app.post('/book-tickets/${matchId}',async(req,res) => {
+
+})
+
+// to get the seat prices 
+app.get(`/admin/addseats/checkSeatsPrice`,async(req,res)=>{
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+// to create the backend database
+app.post(`/admin/addseats/createseats`,async(req,res) => {
+const newSeat = new Seat(req.body);
+try {
+  // Save the newSeat to MongoDB
+  const savedSeat = await newSeat.save();
+  console.log('Seat saved successfully:', savedSeat);
+} catch (error) {
+  console.error('Error saving seat:', error);
+}
+});
+
+// to check a seat on the backend database
+app.get('/admin/addseats/checkseats', async (req, res) => {
+  const matchId = req.query.matchId;
+  const seatKey = req.query.seatKey;
+
+  try {
+    const checkSeat = await Seat.findOne({ seatNumber: seatKey, matchId: matchId });
+    if (checkSeat) {
+      console.log(checkSeat); // Optional: Log the seat details if it exists
+      res.send('true'); // Seat exists, return true as a response
+    } else {
+      res.send('false'); // Seat does not exist, return false as a response
+    }
+  } catch (error) {
+    // Handle any errors that might occur during the asynchronous operations
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+})
+
+
+
+// to make the seats unavailable 
+app.put(`/admin/addseats/setunavailable`, async (req, res) => {
+  try {
+    console.log("reached");
+    const { unavailableSeats } = req.body;
+    for (const seat of unavailableSeats) {
+      console.log(typeof(seat));
+    }
+    // Validate that unavailableSeats is an array
+    if (!Array.isArray(unavailableSeats)) {
+      return res.status(400).json({ error: 'Invalid data format. unavailableSeats should be an array.' });
+    }
+    // Loop through the seat numbers to check if each seat exists in the database
+    for (const seatNumber of unavailableSeats) {
+      console.log(seatNumber);
+      const existingSeat = await Seat.findOne({ seatNumber: seatNumber.toString() });
+       console.log(seatNumber.toString());
+      if (existingSeat) {
+        // If the seat exists, update its seatAvailability to 'unavailable'
+        existingSeat.seatAvailability = 'unavailable';
+        await existingSeat.save();
+      } else {
+        console.error('Seat does not exist');
+      }
+    }
+
+    res.json({ message: 'Seats updated successfully.' });
+  } catch (err) {
+    console.error('Error updating seats:', err);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+});
+
 
 
 
