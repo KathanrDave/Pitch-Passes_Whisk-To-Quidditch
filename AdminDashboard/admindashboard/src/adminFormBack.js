@@ -156,10 +156,27 @@ app.post('/book-tickets/${matchId}',async(req,res) => {
 })
 
 // to get the seat prices 
-app.get(`/admin/addseats/checkSeatsPrice`,async(req,res)=>{
-  
-})
 
+// API endpoint to get the seat price based on matchId and seatKey
+
+app.get('/admin/addseats/checkSeatsPrice', async (req, res) => {
+  const { matchId, seatKey } = req.query;
+
+  try {
+    // Find the seat based on matchId and seatKey in the database
+    const seat = await Seat.findOne({ matchId, seatNumber: seatKey });
+
+    if (!seat) {
+      return res.status(404).json({ message: 'Seat price not found' });
+    }
+
+    // Respond with the seat price and seatType
+    res.json({ price: seat.seatPrice, seatType: seat.seatType });
+  } catch (err) {
+    console.error('Error fetching seat price:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 

@@ -24,7 +24,7 @@ export default function MatchDisplay() {
     '64ac2fca55cfd077059ba048',
   ]);
 
-  const matchIds = matchData.map((data) => data.matchId); // Array to store matchIds
+  const matchIds= matchData.map((data) => data.matchId); // Array to store matchIds
 
   useEffect(() => {
     const fetchMatchData = async () => {
@@ -61,8 +61,8 @@ export default function MatchDisplay() {
   }, [location, remainingMatchIds]);
 
   const handleBookTicket = (index) => {
-    const matchId = matchIds[index]; // Access matchId using the index
-    navigate(`/book-tickets/${matchId}`);
+    const matchId = matchIds[index];
+    navigate(`/booktickets?matchId=${matchId}`);
   };
 
   return (

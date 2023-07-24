@@ -4,9 +4,10 @@ import axios from 'axios';
 import Seat from './Seat';
 import  { useState,useEffect } from 'react';
 import TextField from '@mui/material/TextField'; // Import the TextField component
-const SeatingMap = ({seatDataCallback}) => {
+const SeatingMap = ({ seatDataCallback, matchId }) => {
   const numRows = 4; // Number of rows in each matrix
   const numCols = 4; // Number of columns in each matrix
+ console.log('Seating Map :',matchId);
   const numMatrices = 8; // Total number of matrices
   const matricesPerSide = 4; // Number of matrices on each side (upper and lower)
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -40,9 +41,7 @@ const SeatingMap = ({seatDataCallback}) => {
 
 
   const handleSeatSelection = (seatKey) => {
-    console.log(seatKey);
     setSelectedSeatKey(seatKey);
-    console.log(typeof(seatKey));
     // Check if the seatKey is already in the selectedSeats list
     if (selectedSeats.includes(seatKey)) {
       // Remove the seatKey from the list if it's already selected
@@ -52,16 +51,14 @@ const SeatingMap = ({seatDataCallback}) => {
       setSelectedSeats([...selectedSeats, seatKey]);
     }
   };
+
+  // used for sending the match id to small box book 
   useEffect(() => {
-    console.log(selectedSeats.length)
     console.log('Selected seats:', selectedSeats.join(', '));
-    seatDataCallback(selectedSeats);
+    // Send both selectedSeats and matchId as an object
+    seatDataCallback({selectedSeats });
   }, [selectedSeats]);
   
-  const seatPrice=100;
-  const seatType='Silver';
-const matchId='64a55f28de73098269e32abd';
-// const Id=matchId;
 
 // function to make the seat according to particular id
 
