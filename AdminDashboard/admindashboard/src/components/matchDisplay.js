@@ -11,21 +11,17 @@ import {
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-
+import CountdownTimer from './countDown';
 export default function MatchDisplay() {
   const location = useLocation();
   const navigate = useNavigate();
   const [matchData, setMatchData] = useState([]);
   const [remainingMatchIds, setRemainingMatchIds] = useState([
     '64a55f28de73098269e32abd',
-    '64ac1331c70226ad26ae6515',
-    '64a8856b1ac400e9aea2cbe0',
-    '64a8851fa1003860a5a1ce69',
-    '64ac2fca55cfd077059ba048',
   ]);
 
   const matchIds= matchData.map((data) => data.matchId); // Array to store matchIds
-
+  
   useEffect(() => {
     const fetchMatchData = async () => {
       try {
@@ -38,7 +34,6 @@ export default function MatchDisplay() {
           const data = response.data;
           const initialTime = dayjs(new Date(data.dateTime.time));
           const initialDate = dayjs(new Date(data.dateTime.date));
-
           const matchItem = {
             matchId: matchId,
             matchTitle: data.matchTitle,
@@ -59,6 +54,13 @@ export default function MatchDisplay() {
       fetchMatchData();
     }
   }, [location, remainingMatchIds]);
+
+  const getFormattedTargetDateTime = (matchDate, matchTime) => {
+    console.log(matchDate, matchTime);
+    const combinedDateTimeString = `${matchDate.format('YYYY-MM-DD')}T${matchTime.format}:00.000Z`;
+    return new Date(combinedDateTimeString).getTime();
+  };
+  
 
   const handleBookTicket = (index) => {
     const matchId = matchIds[index];
@@ -87,6 +89,8 @@ export default function MatchDisplay() {
             >
               {data.matchTitle}
             </Typography>
+            <CountdownTimer
+              targetDateTime={getFormattedTargetDateTime(data.date, data.time)} />
             <Button
               key={`bookTicket-${index}`}
               sx={{

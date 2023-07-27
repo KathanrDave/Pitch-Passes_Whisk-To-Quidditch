@@ -7,7 +7,7 @@ import { DateField, TimeField } from "@mui/x-date-pickers";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import axios from "axios";
-
+import moment from 'moment';
 
 export default function MatchComponent({ showData }) {
   const location = useLocation();
@@ -59,6 +59,16 @@ export default function MatchComponent({ showData }) {
         });
     }
   }, [showData, location]);
+ 
+  function formatTime(timeObject) {
+    // Assuming the timeObject is of the format you provided
+    const time = moment(timeObject.$d);
+  
+    // Format time as "HH:mm AM/PM"
+    const formattedTime = time.format('HH:mm A');
+  
+    return formattedTime;
+  }
 
   // Handle input changes and update state
   const handleInputChange = (event) => {
@@ -69,7 +79,7 @@ export default function MatchComponent({ showData }) {
     const numRows = event.target.value.split("\n").length;
     event.target.rows = numRows > 4 ? numRows : 4;
   };
-
+  
   // Handle form submission
   const handleSubmitUpdate = (event) => {
     event.preventDefault();
@@ -143,7 +153,7 @@ export default function MatchComponent({ showData }) {
                 label="Basic date field"
                 value={matchData.date}
                 onChange={(date) =>
-                  handleInputChange({ target: { value: date, name: "date" } })
+                  handleInputChange({ target: { value: date.format('YYYY-MM-DD'), name: "date" } })
                 }
               />
             </DemoContainer>
