@@ -9,8 +9,10 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const User = require("./model/user");
+const Team =require("./model/teamModel");
 const Seat=require("./model/seatModel");
 const matchData = require("./model/matchModel");
+const Player=require("./model/teamPlayer");
 const cors = require("cors");
 
 // Enable CORS for all routes
@@ -179,12 +181,43 @@ app.get('/admin/addseats/checkSeatsPrice', async (req, res) => {
 });
 
 
+// to fetch the team names and its particular object ids
+
+app.get('/getTeamNames', async (req, res) => {
+  try {
+    const teams = await Team.find({}, '_id name'); 
+    const idToNameMap = {};
+    teams.forEach((team) => {
+      idToNameMap[team._id] = team.name;
+    });
+
+    res.json(idToNameMap);
+  } catch (error) {
+    console.error('Error in finding the list of Team Names', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 
+// to fetch the paticular team information based on the team id
 
 
+// Route to fetch all players of a specific team
+app.get('/getteam', async (req, res) => {
+  try {
+    const teamName = req.query.teamName;
+    console.log(teamName);
+    const teamData = await Player.find({ team: teamName });
 
-
+    if (teamData.length === 0) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+    res.json(teamData);
+  } catch (error) {
+    console.error('Error in fetching team data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 

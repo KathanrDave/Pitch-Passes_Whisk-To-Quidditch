@@ -1,0 +1,12 @@
+.typewriter-text {
+    font-size: 24px;
+    font-weight: bold;
+    animation: typing 2s steps(20, end);
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+  }
+  

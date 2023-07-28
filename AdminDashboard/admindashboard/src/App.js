@@ -10,6 +10,8 @@ import AddSeats from "./components/addSeats";
 import UserSeatBook from "./components/userSeatBook";
 import { useLocation } from 'react-router-dom';
 import CountdownTimer from './components/countDown';
+import TeamPage from "./components/teamPage";
+import ShowTeamPage from "./components/ShowTeamPage";
 function App() {
   const targetDateTime = new Date('2023-08-04T19:00:00.000Z').getTime();
 
@@ -24,6 +26,8 @@ function App() {
         <Route path="/admin/addseats" element={<AddSeats/>}/>
         <Route path="/comp" element={<MatchComponent/>}></Route>
         <Route path="/user/matches" element={<CountdownTimer targetDateTime={targetDateTime}/>}></Route>
+        <Route path="/users" element={<TeamPage/>}></Route>
+        <Route path="/showteam" element={<ShowTeamPage/>}></Route>
       </Routes>
      
     </div>
