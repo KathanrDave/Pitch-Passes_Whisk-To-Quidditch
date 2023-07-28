@@ -6,6 +6,7 @@
     "@mui/joy": "^5.0.0-alpha.88",
     "@mui/material": "^5.14.2",
     "@mui/styles": "^5.14.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.4"
   }
 }

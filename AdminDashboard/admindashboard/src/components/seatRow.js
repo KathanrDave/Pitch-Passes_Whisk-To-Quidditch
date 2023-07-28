@@ -63,40 +63,39 @@ const SeatingMap = ({ seatDataCallback, matchId }) => {
 // function to make the seat according to particular id
 
 
-const makeSeats = async (seatKey, matchId) => {
-  const url = `http://localhost:3002/admin/addseats/checkseats?matchId=${matchId}&seatKey=${seatKey}`;
-
-  let response;
-  try {
-    response = await axios.get(url);
-    console.log(response.data);
-  } catch (error) {
-    console.log('Error:', error);
-    // alert('Error checking seat. Please try again later.');
-    return;
-  }
-
-  if (!response.data) {
-    console.log('Creating seat');
-    const seatUrl = `http://localhost:3002/admin/addseats/createseats`;
-    const seatData = {
-      seatNumber: seatKey,
-      seatAvailability: 'available',
-      seatPrice: '100', // Replace with the desired seat price
-      seatType: 'standard', // Replace with the desired seat type
-      matchId: matchId,
-    };
+const makeSeats = async (seatKeys, matchId) => {
+  const createSeat = async (seatKey) => {
+    const url = `http://localhost:3002/admin/addseats/checkseats?matchId=${matchId}&seatKey=${seatKey}`;
 
     try {
-      const createResponse = await axios.post(seatUrl, seatData);
-      console.log(createResponse.data);
+      const response = await axios.get(url);
+      if (!response.data) {
+        console.log(`Creating seat ${seatKey}`);
+        const seatUrl = 'http://localhost:3002/admin/addseats/createseats';
+        const seatData = {
+          seatNumber: seatKey,
+          seatAvailability: 'available',
+          seatPrice: '100', // Replace with the desired seat price
+          seatType: 'standard', // Replace with the desired seat type
+          matchId: matchId,
+        };
+        const createResponse = await axios.post(seatUrl, seatData);
+        console.log(createResponse.data);
+        return createResponse.data; // Return the created seat data
+      } else {
+        console.log(`Seat ${seatKey} already exists`);
+        return null; // Return null if seat already exists
+      }
     } catch (error) {
-      console.log('Error creating seat:', error);
+      console.log(`Error processing seat ${seatKey}:`, error);
+      return null; // Return null in case of error
     }
-  } else {
-    // console.log('Seat already exists');
-  }
+  };
+  const promises = seatKeys.map((seatKey) => createSeat(seatKey));
+  const results = await Promise.all(promises);
+  return results.filter((result) => result !== null); 
 };
+
 
 
 // const generateSeatStatus = async (matrixIndex, rowIndex, colIndex) => {
@@ -127,7 +126,7 @@ const makeSeats = async (seatKey, matchId) => {
       <div style={rowStyle}>
         {Array.from({ length: matricesPerSide }).map((_, matrixIndex) => (
           <div key={matrixIndex} style={matrixContainerStyle}>
-             <div style={{ marginBottom: '10px', fontWeight: 'bold' ,font:'Poppins'}}>Tower : {String.fromCharCode(matrixIndex + 1+ 64) }</div>
+             <div style={{ marginBottom: '10px', fontWeight: 'bold' ,font:'Poppins'}}>Tower : {String.fromCharCode(matrixIndex +1+64) }</div>
             {Array.from({ length: numRows }).map((_, rowIndex) => (
               <div key={rowIndex} style={rowStyle}>
                 {Array.from({ length: numCols }).map((_, colIndex) => (
