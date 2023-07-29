@@ -31,11 +31,18 @@ const SeatingMap = ({ seatDataCallback, matchId }) => {
     margin: "0 1px 1px 0", // Add equal margin of 1px after each seat
   };
 
-
+const seatKeys=[];
 const generateSeatKey = (matrixIndex, rowIndex, colIndex) => {
   const towerChar = String.fromCharCode(matrixIndex + 65); 
   const seatCounter=(rowIndex)*numCols+colIndex+1;
   const seatKey = `${towerChar}${seatCounter}`;
+  
+  // Check if the seatKey is not present in the seatKeys array
+  if (!seatKeys.includes(seatKey)) {
+    // Add the new seatKey to the seatKeys array
+    seatKeys.push(seatKey);
+  }
+
   return seatKey;
 };
 
@@ -61,10 +68,9 @@ const generateSeatKey = (matrixIndex, rowIndex, colIndex) => {
 
   // function to make the seat according to particular id
 
-  const makeSeats = async (seatKeys, matchId) => {
+  const makeSeats = async (seatKey, matchId) => {
     const createSeat = async (seatKey) => {
       const url = `http://localhost:3002/admin/addseats/checkseats?matchId=${matchId}&seatKey=${seatKey}`;
-
       try {
         const response = await axios.get(url);
         if (!response.data) {
@@ -80,19 +86,21 @@ const generateSeatKey = (matrixIndex, rowIndex, colIndex) => {
           const createResponse = await axios.post(seatUrl, seatData);
           console.log(createResponse.data);
           return createResponse.data; // Return the created seat data
+
         } else {
           console.log(`Seat ${seatKey} already exists`);
           return null; // Return null if seat already exists
+          
         }
       } catch (error) {
         console.log(`Error processing seat ${seatKey}:`, error);
         return null; // Return null in case of error
       }
     };
-    // const promises = seatKeys.map((seatKey) => createSeat(seatKey));
-    // const results = await Promise.all(promises);
-    // return results.filter((result) => result !== null);
   };
+
+
+
 
   // const generateSeatStatus = async (matrixIndex, rowIndex, colIndex) => {
   //   let response;

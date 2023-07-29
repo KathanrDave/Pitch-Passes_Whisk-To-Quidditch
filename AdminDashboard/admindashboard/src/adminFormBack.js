@@ -1,5 +1,5 @@
 // backend/server.js
-
+const { MongoClient } = require("mongodb");
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -220,7 +220,7 @@ app.get('/getteam', async (req, res) => {
 });
 
 
-    
+
 
 // to create the backend database
 app.post(`/admin/addseats/createseats`,async(req,res) => {
@@ -235,7 +235,30 @@ try {
 });
 
 
+// to sort the data of seats accordingly
 
+
+// async function sortData(){
+//   const client = new MongoClient(MONGO_URL);
+//   try{
+    
+//     await client.connect();
+
+
+//     const sortField = "seatNumber";
+//     const sortOrder = 1; // 1 for ascending order, -1 for descending order
+
+//     const sortResult = await Seat.find().sort({ [sortField]: sortOrder }).toArray();
+//     console.log("Sorted Result:", sortResult); 
+
+//   }catch(error)
+//   {
+//     console.error("Error:", error)
+//   }finally {
+//     client.close();
+//   }
+  
+// }
 
 // to check a seat on the backend database
 app.get('/admin/addseats/checkseats', async (req, res) => {
