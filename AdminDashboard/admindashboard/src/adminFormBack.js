@@ -208,7 +208,7 @@ app.get('/getteam', async (req, res) => {
     const teamName = req.query.teamName;
     console.log(teamName);
     const teamData = await Player.find({ team: teamName });
-
+    console.log(teamData);
     if (teamData.length === 0) {
       return res.status(404).json({ message: 'Team not found' });
     }
@@ -220,7 +220,7 @@ app.get('/getteam', async (req, res) => {
 });
 
 
-
+    
 
 // to create the backend database
 app.post(`/admin/addseats/createseats`,async(req,res) => {
