@@ -10,8 +10,6 @@ export default function UserSeatBook() {
   const [seatData, setSeatData] = useState({});
 
   const handleChange = (selectedSeats) => {
-    console.log('User');
-    console.log(selectedSeats);
     setSeatData(selectedSeats);
   };
   return (

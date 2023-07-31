@@ -60,6 +60,29 @@ const teamIdsArray = Object.keys(teamIds);
             alignItems: 'center',
           }}
         >
+
+<div className="button-container">
+<Button
+            // className="fancy-button"
+            onClick={() => {
+              // Navigate to the "Add Teams" page when the button is clicked
+              navigate('/addteams');
+            }}
+            sx={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              backgroundColor: 'violet',
+              color: 'white',
+              borderRadius: '8px',
+              padding: '10px 20px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            Add Teams
+          </Button>
+    </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box
               sx={{

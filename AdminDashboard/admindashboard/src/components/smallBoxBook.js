@@ -21,8 +21,8 @@
   export default function BoxBook({selectedSeats, matchId}) {
     const Total = 100;
     const [seatsArray, setSeatsArray] = useState([]);
+
 useEffect(() => {
-  // Check if selectedSeats is an object before calling Object.values()
   if (typeof selectedSeats === 'object' && selectedSeats !== null) {
     setSeatsArray(Object.values(selectedSeats));
   } else {
@@ -30,45 +30,41 @@ useEffect(() => {
   }
 }, [selectedSeats]);
 
+
     const [totalPrice, setTotalPrice] = useState(0);
-
-     // changes is called when the user changes the seat
      useEffect(() => {
-      // const newTotalPrice = calculateTotalPrice();
-      // setTotalPrice(newTotalPrice);
     }, [seatsArray,selectedSeats]);
-
-    console.log(seatsArray);
   
-
     // calculate the total seat price 
     const calculateTotalPrice = () => {
       let totalPrice = 0;
       seatsArray.forEach((seatKey) => {
         const url=`http://localhost:3002/admin/addseats/checkSeatsPrice?matchId=${matchId}&seatKey=${seatKey}`;
         axios.get(url).then((response) => {
-
         })
         const seatPrice = selectedSeats[seatKey];
         totalPrice += seatPrice;
       });
       return totalPrice;
     };
- 
-    return (
+
+const seatsArrayLength = seatsArray[0] ? seatsArray[0].length : 0;
+const boxSize = 200 + seatsArray.length * 20;  
+  
+  return (
       <div>
         <Box
           sx={{
             display: "flex",
-            height: 200,
-            width: 200,
+            height: `${boxSize}px`,
+          width: `${boxSize}px`,
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
             backgroundColor: "#f0f0f0",
             padding: "10px",
             border: "1px solid #ccc",
-            fontFamily: "Roboto, sans-serif", // Use the Roboto font here
+            fontFamily: "Roboto, sans-serif",
             borderRadius: "5px",
             fontWeight: "bold",
             position: "absolute",
@@ -82,9 +78,10 @@ useEffect(() => {
               backgroundColor: "#66c2ff",
               color: "#fff",
               borderRadius: "3px",
+              marginBottom: "10px", 
             }}
           >
-            No of Tickets: {selectedSeats.length}
+            No of Tickets: {seatsArrayLength}
           </div>
           <div
             sx={{
@@ -92,6 +89,7 @@ useEffect(() => {
               backgroundColor: "#66c2ff",
               color: "#fff",
               borderRadius: "3px",
+              marginBottom: "10px",
             }}
           >
           Type of Tickets: {selectedSeats.length}
@@ -103,6 +101,7 @@ useEffect(() => {
               backgroundColor: "#66c2ff",
               color: "#fff",
               borderRadius: "3px",
+              marginBottom: "10px",
             }}
           >
             Total: {Total}
@@ -113,11 +112,11 @@ useEffect(() => {
     backgroundColor: "#66c2ff",
     color: "#fff",
     borderRadius: "3px",
+    marginBottom: "10px", 
   }}
 >
   Seats: {seatsArray.join(", ")}
-</div>
-          
+</div>          
           <StyledButton>BOOK NOW</StyledButton>
         </Box>
       </div>

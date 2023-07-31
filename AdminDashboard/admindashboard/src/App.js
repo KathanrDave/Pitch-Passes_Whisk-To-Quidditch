@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import CountdownTimer from './components/countDown';
 import TeamPage from "./components/teamPage";
 import ShowTeamPage from "./components/ShowTeamPage";
+import AddYouTeam  from "./components/addYouTeam";
 function App() {
   const targetDateTime = new Date('2023-08-04T19:00:00.000Z').getTime();
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/user/matches" element={<CountdownTimer targetDateTime={targetDateTime}/>}></Route>
         <Route path="/users" element={<TeamPage/>}></Route>
         <Route path="/showteam" element={<ShowTeamPage/>}></Route>
+        <Route path="/addyourteam" element={<AddYouTeam/>}></Route>
       </Routes>
      
     </div>

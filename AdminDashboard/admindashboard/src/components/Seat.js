@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
-const Seat = ({ user, seatKey, status, onSelect, checkselect}) => {
+const Seat = ({ user, seatKey, statusPromise, onSelect, checkselect}) => {
+  // console.log(statusPromise);
   const [selected, setSelected] = useState(checkselect);
-  const booked = status === 'booked';
+  const [status, setStatus] = useState('available'); // Initialize status as 'loading'    
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const resolvedStatus = await statusPromise;
+        setStatus(resolvedStatus);
+      } catch (error) {
+        console.error('Error fetching status:', error);
+        setStatus('error'); // Set a fallback status in case of an error
+      }
+    };
+    fetchStatus();
+  }, [statusPromise]);
 
+  // console.log(status);
   const handleClick = () => {
-    if (user && !booked) {
+    if (user && !(status==='booked') && !(status==='unavailable')) {
       console.log("show ", !selected);
       setSelected(!selected);
       // Notify the parent component about seat selection if needed
@@ -16,19 +30,17 @@ const Seat = ({ user, seatKey, status, onSelect, checkselect}) => {
   const seatStyle = {
     width: '17px',
     height: '17px',
-    backgroundColor: booked ? 'lightyellow' : selected ? 'skyblue' : 'lightgray',
+    backgroundColor: status === 'booked' ?'lightyellow' : selected ? 'skyblue' : status === 'unavailable' ? 'darkgray' : 'lightgray',
     border: '1px solid gray',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: booked ? 'not-allowed' : 'pointer',
+    cursor: status==='booked' || status === 'unavailable' ? 'not-allowed' : 'pointer',
     borderRadius: '4px',
   };
 
   return (
-    <div style={seatStyle} onClick={handleClick} disabled={booked}>
-      
-    </div>
+    <div style={seatStyle} onClick={handleClick} disabled={status === 'booked' || status === 'unavailable'}></div>
   );
 };
 

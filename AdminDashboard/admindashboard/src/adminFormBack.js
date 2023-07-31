@@ -1,5 +1,5 @@
 // backend/server.js
-
+const { MongoClient } = require("mongodb");
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -13,6 +13,7 @@ const Team =require("./model/teamModel");
 const Seat=require("./model/seatModel");
 const matchData = require("./model/matchModel");
 const Player=require("./model/teamPlayer");
+const Tower=require("./model/towerModel");
 const cors = require("cors");
 
 // Enable CORS for all routes
@@ -208,7 +209,7 @@ app.get('/getteam', async (req, res) => {
     const teamName = req.query.teamName;
     console.log(teamName);
     const teamData = await Player.find({ team: teamName });
-
+    console.log(teamData);
     if (teamData.length === 0) {
       return res.status(404).json({ message: 'Team not found' });
     }
@@ -220,6 +221,39 @@ app.get('/getteam', async (req, res) => {
 });
 
 
+// Route for adding user teams
+
+// Route for adding user teams
+app.post("/adduserteams", (req, res) => {
+  const teamData = req.body;
+  console.log(teamData);
+  // Convert the base64 image data to a Buffer
+  const imageBuffer = Buffer.from(teamData.image.data, "base64");
+
+  // Create a new player using the Player model
+  const newPlayer = new Player({
+    team: teamData.team,
+    role: teamData.role,
+    name: teamData.name,
+    matches: teamData.matches,
+    image: {
+      data: imageBuffer,
+      contentType: teamData.image.contentType,
+    },
+  });
+
+  // Save the new player to the database
+  newPlayer
+    .save()
+    .then(() => {
+      console.log("New player added:", newPlayer);
+      res.status(201).json({ message: "Player added successfully" });
+    })
+    .catch((error) => {
+      console.error("Error adding player:", error);
+      res.status(500).json({ message: "Failed to add player" });
+    });
+});
 
 
 // to create the backend database
@@ -235,7 +269,28 @@ try {
 });
 
 
+// to sort the data of seats accordingly
 
+
+// async function sortData(){
+//   const client = new MongoClient(MONGO_URL);
+//   try{
+    
+//     await client.connect();
+//     const sortField = "seatNumber";
+//     const sortOrder = 1; // 1 for ascending order, -1 for descending order
+
+//     const sortResult = await Seat.find().sort({ [sortField]: sortOrder }).toArray();
+//     console.log("Sorted Result:", sortResult); 
+
+//   }catch(error)
+//   {
+//     console.error("Error:", error)
+//   }finally {
+  //     client.close();
+//   }
+  
+// }
 
 // to check a seat on the backend database
 app.get('/admin/addseats/checkseats', async (req, res) => {
@@ -257,6 +312,21 @@ app.get('/admin/addseats/checkseats', async (req, res) => {
   }
 })
 
+
+// To get the list of the seats booked or available by the user
+app.get(`/users/seatList`,async(req,res)=>{
+try{
+ const matchId=req.query.matchId;
+ const data=await Tower.findOne({matchId:matchId});
+ if(!data){
+return res.status(404).json({message:`Match Not Found`});
+ }
+ res.status(200).json({ booked: data.bookedSeats, unavailable: data.unavailableSeats });
+}catch(error){
+  console.error('Error fetching data:', error);
+  res.status(500).json({ message: 'Server error' });
+}
+})
 
 
 // to make the seats unavailable 
@@ -320,6 +390,19 @@ app.put(`/admin/updaterecords`, async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // app listening on the port
 
