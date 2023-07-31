@@ -5,7 +5,7 @@ const middleware = require("../middlewares/passportmiddleware");
 const isAuthenticated = require("../middlewares/authcheck");
 const passport = require("passport");
 
-router.get("/user", isAuthenticated, (req, res) => {
+router.get("/user", (req, res) => {
   // Since the isAuthenticated middleware already checks for authentication,
   // you can assume that the user is authenticated at this point.
   res.json({ message: "Authenticated user", user: req.user });

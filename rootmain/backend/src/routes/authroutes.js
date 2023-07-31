@@ -3,8 +3,9 @@ const router = express.Router();
 const authcontroller = require("../controllers/authcontroller");
 const middleware = require("../middlewares/passportmiddleware");
 const isAuthenticated = require("../middlewares/authcheck");
+var jwt = require("jsonwebtoken");
 const passport = require("passport");
-
+const cors = require("cors");
 // Handle POST request for
 // User sign up
 router.post("/signup", authcontroller.Signup);
@@ -28,24 +29,62 @@ router.get(
 // Route for initiating Google OAuth authentication
 router.get(
   "/google",
+  cors({ origin: "http://localhost:3000", credentials: true }),
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "consent",
   })
 );
+// Function to generate the JWT
+const generateJWT = (user) => {
+  const payload = {
+    user: {
+      id: user._id,
+      email: user.email,
+    },
+  };
 
+  const token = jwt.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: "2h",
+  });
+
+  return token;
+};
 // Callback route for handling the Google OAuth callback
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/user",
-    failureRedirect: "http://localhost:3000/auth/signup", // Replace with the URL to redirect after failed sign-in
-  }),
-  (req, res) => {
-    // Handle successful Google sign-in
-    res.json({ success: true });
-  }
-);
+router.get("/google/callback", (req, res, next) => {
+  // Use a custom callback for passport.authenticate
+  passport.authenticate("google", { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (user) {
+      // If the user is available (authenticated via Google), generate the JWT
+      const token = generateJWT(user);
+
+      // Include user data in the response along with the JWT token
+      const userData = {
+        googleId: user.googleId,
+        email: user.email,
+        // Add any other user data you want to include
+      };
+
+      // Set the JWT token as a cookie in the response
+      res.cookie("jwtToken", userData.token, {
+        path: "/", // Set the cookie to be accessible from all routes
+        maxAge: 2 * 60 * 60, // Set the cookie expiration time (2 hours in this example)
+        sameSite: "lax", // Set the sameSite attribute for improved security
+        secure: false, // Set this to "true" if your frontend is served over HTTPS
+      });
+
+      // Send the user data along with the response
+      return res.redirect("http://localhost:3000/user"); // Redirect to the user page
+    } else {
+      // If the user is not authenticated via Google, handle failed sign-in
+      return res.redirect("http://localhost:3000/auth/signup");
+    }
+  })(req, res, next); // Invoke the custom callback function
+});
 
 // Logout
 router.get("/logout", authcontroller.logout);

@@ -1,13 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Signup from "./pages/signup";
-import Signin from "./pages/signin";
+import Signup from "./pages/auth/signup";
+import Signin from "./pages/auth/signin";
 import User from "./pages/user";
 import Home from "./pages/home";
-import Adminsignin from "./pages/adminsignin";
-import Adminregister from "./pages/adminForm";
+import Adminsignin from "./pages/auth/adminsignin";
+import Adminregister from "./pages/match/adminForm";
 import Admin from "./pages/admin";
-
+import Match from "./pages/match/match";
+import Matchsee from "./pages/match/matchsee";
 import Matchtab from "./pages/match/matchTab";
 import Matchshow from "./pages/match/matchShow";
 import MatchDisplay from "./pages/match/matchDisplay";
@@ -35,6 +36,8 @@ function App() {
         <Route path="/user/userSeatBook" element={<UserSeatBook />} />
         <Route path="/admin/addseats" element={<AddSeats />} />
 
+        <Route path="/admin/match" element={<Match />} />
+        <Route path="/admin/matchsee" element={<Matchsee />} />
         <Route path="/user" element={<User />} />
 
         {/* <Route path="/auth/google/callback" element={<User />} /> */}

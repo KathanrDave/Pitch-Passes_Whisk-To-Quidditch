@@ -1,166 +1,68 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Box, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+
+const CardWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "400px",
+  height: "400px",
+  padding: "50px 20px", // Decreased the horizontal padding to adjust for the card width
+  backgroundColor: "#6e4ce1",
+  borderRadius: "38px",
+  color: "#f6f2e8",
+  margin: "0 20px", // Added left margin to center the first card
+  transition: "width 0.3s ease-in-out", // Added the transition property for smooth width changes
+  [theme.breakpoints.down("sm")]: {
+    width: "100px",
+    height: "300px",
+    padding: "30px 20px",
+  },
+}));
 
 const HorizontalScrollerfirst = () => {
-  const horizontalRef = useRef(null);
+  const cardData = [
+    { id: 1, title: "Card 1" },
+    { id: 2, title: "Card 2" },
+    { id: 3, title: "Card 3" },
+    { id: 4, title: "Card 4" },
+    { id: 5, title: "Card 5" },
+    // Updated card titles to show the correct number
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (horizontalRef.current) {
-        const scrollPosition =
-          window.pageYOffset || document.documentElement.scrollTop;
-        const cardWidth = 540;
-        const cardMargin = 20;
-        const numberOfCards = 5;
-        const totalScrollWidth = (cardWidth + cardMargin) * numberOfCards; // Adjusted for 4 cards
-
-        // Calculate the current scroll percentage
-        const scrollPercentage =
-          (scrollPosition /
-            (document.documentElement.scrollHeight - window.innerHeight)) *
-          100;
-
-        // Calculate the translateX value to move the cards horizontally
-        const translateX =
-          (scrollPercentage / 100) *
-          (totalScrollWidth - window.innerWidth + cardWidth) *
-          3;
-
-        // Restrict the translateX value within the range of the cards
-        const minTranslateX = 0;
-        const maxTranslateX = (cardWidth + cardMargin) * (numberOfCards + 1);
-        const clampedTranslateX = Math.min(
-          Math.max(translateX, minTranslateX),
-          maxTranslateX
-        );
-
-        horizontalRef.current.style.transform = `translateX(-${clampedTranslateX}px)`;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    // Add more cards if needed
+  ];
 
   return (
     <Box
-      id="horizontal-scroll"
       sx={{
-        backgroundColor: "#04091E",
-        height: "120vh",
-        overflow: "hidden",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        position: "relative", // Added position relative
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        minHeight: "100vh", // Set the minimum height of the container to 100% of the viewport height
+        backgroundColor: "black", // Optional background color for the page
+        overflowX: "auto", // Allow horizontal scrolling
+        scrollbarWidth: "none", // Hide scrollbar for modern browsers
+        msOverflowStyle: "none", // Hide scrollbar for old Edge
+        WebkitOverflowScrolling: "touch", // Improve touch scrolling experience on mobile
+        "&::-webkit-scrollbar": {
+          display: "none", // Hide scrollbar for Safari and Chrome
+        },
+        scrollBehavior: "smooth",
       }}
     >
       <Box
-        ref={horizontalRef}
         sx={{
           display: "flex",
-          transition: "transform 0.3s ease-in-out",
-          scrollBehavior: "smooth",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-          position: "absolute", // Added position absolute
+          padding: "20px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            padding: "0 15px",
-            height: "300px",
-            marginLeft: "20px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "540px",
-              height: "540px",
-              padding: "50px 40px",
-              backgroundColor: "#6e4ce1",
-              borderRadius: "38px",
-              color: "#f6f2e8",
-              marginLeft: "20px",
-            }}
-          >
-            <Typography variant="h2">Card 1</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "540px",
-              height: "540px",
-              padding: "50px 40px",
-              backgroundColor: "#6e4ce1",
-              borderRadius: "38px",
-              color: "#f6f2e8",
-              marginLeft: "20px",
-            }}
-          >
-            <Typography variant="h2">Card 2</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "540px",
-              height: "540px",
-              padding: "50px 40px",
-              backgroundColor: "#6e4ce1",
-              borderRadius: "38px",
-              color: "#f6f2e8",
-              marginLeft: "20px",
-            }}
-          >
-            <Typography variant="h2">Card 3</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "540px",
-              height: "540px",
-              padding: "50px 40px",
-              backgroundColor: "#6e4ce1",
-              borderRadius: "38px",
-              color: "#f6f2e8",
-              marginLeft: "20px",
-            }}
-          >
-            <Typography variant="h2">Card 4</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "540px",
-              height: "540px",
-              padding: "50px 40px",
-              backgroundColor: "#6e4ce1",
-              borderRadius: "38px",
-              color: "#f6f2e8",
-              marginLeft: "20px",
-            }}
-          >
-            <Typography variant="h2">Card 5</Typography>
-          </Box>
-        </Box>
+        {cardData.map((card) => (
+          <CardWrapper key={card.id}>
+            <Typography variant="h2">{card.title}</Typography>
+          </CardWrapper>
+        ))}
       </Box>
     </Box>
   );

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, FormLabel } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  FormLabel,
+  CssBaseline,
+  Typography,
+} from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -8,6 +15,50 @@ import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import axios from "axios";
 
+import { styled } from "@mui/system";
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  width: "40%",
+  maxWidth: "500px",
+  padding: "10px",
+  transform: "translate(-50%, -50%)",
+  padding: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "rgba(255,255 , 255, 0.5)", // Glassmorphism effect with grey background
+  borderRadius: theme.spacing(2),
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.2)", // Border shadow to elevate it
+
+  backdropFilter: "blur(10px)",
+
+  [theme.breakpoints.down("sm")]: {
+    width: "90%",
+    maxWidth: 320,
+  },
+
+  // "& input": {
+  //   "&::placeholder": {
+  //     color: "transparent", // On hover, change the input field text color to transparent
+  //   },
+  //   "&:hover": {
+  //     "&::placeholder": {
+  //       color: "darkgrey", // On hover, change the input field text color to dark grey
+  //     },
+  //   },
+  // },
+}));
+const CustomFormLabel = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: theme.spacing(2),
+}));
 
 export default function MatchComponent({ showData }) {
   const location = useLocation();
@@ -23,14 +74,13 @@ export default function MatchComponent({ showData }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(matchData);
-    axios.post(`http://localhost:5000/admin/addeventdetails`, matchData)
+    axios
+      .post(`http://localhost:5000/admin/addeventdetails`, matchData)
       .then((response) => {
-   
         console.log("Match data added successfully:", response.data);
       })
       .catch((error) => {
         console.error("Error adding match data:", error);
-   
       });
   };
 
@@ -76,7 +126,8 @@ export default function MatchComponent({ showData }) {
 
     // Send updated match data to the server
     // console.log(matchData);
-    axios.put(`http://localhost:3002/admin/updaterecords?matchId=${id}`, matchData)
+    axios
+      .put(`http://localhost:3002/admin/updaterecords?matchId=${id}`, matchData)
       .then((response) => {
         console.log("Match data updated successfully:", response.data);
       })
@@ -86,31 +137,29 @@ export default function MatchComponent({ showData }) {
   };
 
   return (
-    <Box
+    <FormContainer
       component="form"
-      sx={{
-        "& .MuiTextField-root": { m: 1, width: "25ch" },
-      }}
       noValidate
       autoComplete="on"
       onSubmit={handleSubmit}
     >
+      <CssBaseline />
+      <Typography variant="h5" align="center" color={"black"} gutterBottom>
+        Add new match
+      </Typography>
       <div>
-
-        <FormLabel>
-          Match Title :{" "}
+        <CustomFormLabel>
           <TextField
+            label="Match Title"
             id="outlined-multiline-flexible"
-            label="Title"
             value={matchData.matchTitle}
             onChange={handleInputChange}
             multiline
             maxRows={4}
             name="matchTitle"
           />
-        </FormLabel>
-        <FormLabel>
-          Venue :{" "}
+        </CustomFormLabel>
+        <CustomFormLabel>
           <TextField
             id="outlined-multiline-flexible"
             label="Venue"
@@ -120,10 +169,9 @@ export default function MatchComponent({ showData }) {
             maxRows={4}
             name="venue"
           />
-        </FormLabel>
+        </CustomFormLabel>
 
-        <FormLabel>
-          Match Details :{" "}
+        <CustomFormLabel>
           <TextField
             id="outlined-multiline-flexible"
             label="Match Details"
@@ -134,9 +182,8 @@ export default function MatchComponent({ showData }) {
             onKeyDown={handleKeyDown}
             name="matchDetails"
           />
-        </FormLabel>
-        <FormLabel>
-          Date :{" "}
+        </CustomFormLabel>
+        <CustomFormLabel>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DateField"]}>
               <DateField
@@ -148,9 +195,8 @@ export default function MatchComponent({ showData }) {
               />
             </DemoContainer>
           </LocalizationProvider>
-        </FormLabel>
-        <FormLabel>
-          Time:{" "}
+        </CustomFormLabel>
+        <CustomFormLabel>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DateField"]}>
               <TimeField
@@ -167,17 +213,17 @@ export default function MatchComponent({ showData }) {
               />
             </DemoContainer>
           </LocalizationProvider>
-        </FormLabel>
+        </CustomFormLabel>
 
-        <Button variant="contained" type="submit" onClick={showData ? handleSubmitUpdate : handleSubmit}>
+        <Button
+          variant="contained"
+          type="submit"
+          onClick={showData ? handleSubmitUpdate : handleSubmit}
+        >
           {showData ? "Update Record" : "Submit"}
         </Button>
-
       </div>
       {/* ToastContainer for displaying toasts */}
-     
-       
-
-    </Box>
+    </FormContainer>
   );
 }
