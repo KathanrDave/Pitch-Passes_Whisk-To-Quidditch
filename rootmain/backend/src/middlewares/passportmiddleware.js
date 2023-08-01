@@ -71,7 +71,22 @@ passport.use(
     }
   })
 );
+const generateJWT = (user) => {
+  // Set the payload data for the JWT
+  const payload = {
+    user: {
+      id: user._id,
+      email: user.email,
+    },
+  };
 
+  // Sign the JWT with the secret key from your .env file
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "2h", // Set the token expiration time (e.g., 2 hours)
+  });
+
+  return token;
+};
 passport.use(
   "google",
   new GoogleStrategy(
@@ -93,7 +108,7 @@ passport.use(
             email: profile.email,
           })
             .save()
-            .then((newUser) => {
+            .then((newUser) => {  
               console.log("created new user: ", newUser);
               done(null, newUser);
             });

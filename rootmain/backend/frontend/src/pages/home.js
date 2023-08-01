@@ -10,9 +10,14 @@ import {
   Box,
   Link,
 } from "@mui/material";
-
 import HorizontalScrollerfirst from "../components/HorizontalScrollerfirst";
 // import HorizontalScrollersecond from "../components/HorizontalScrollersecond";
+import homapageimg from "./teamimages/homepageimg.png";
+import snitch from "./teamimages/snitch.jpeg";
+// import logo from "./teamimages/logo.png";
+import Navbar from "../components/navbarHome";
+// import Navbar from "../components/navbar";
+// import cuscol from "../assets/colors";
 
 const Content = styled("div")({
   margin: "0 auto",
@@ -30,160 +35,88 @@ const MainContent = styled("div")({
   height: "100vh", // Each section will have a height of 100vh
   display: "flex",
   zIndex: "1000",
-  flexDirection: "column",
+  flexDirection: "rowe",
   justifyContent: "center",
 });
-const NavLink = styled("span")({
-  margin: "0 10px",
-  color: "#FFFFFF",
-  cursor: "pointer",
+
+const LoaderContainer = styled("div")({
+  width: "100%",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "#0D0D0D",
+  zIndex: 0,
+});
+
+const GoldenSnitch = styled("div")({
+  width: "500px",
+  height: "500px",
+  backgroundImage: `url(${snitch})`, // Replace with the actual image URL
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  position: "relative",
+  zIndex: 1,
+  animation: `$spin 2s linear infinite`, // Use the animation defined below
+  "@keyframes spin": {
+    "0%": {
+      transform: "rotate(0deg)",
+    },
+    "100%": {
+      transform: "rotate(360deg)",
+    },
+  },
 });
 
 const Home = () => {
-  const [isExtended, setIsExtended] = useState(true);
-  const [fontSize, setFontSize] = useState(8);
-  const [isScrolled, setIsScrolled] = useState(true);
-
+  const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset;
-
-      if (scrollTop > 0 && !isScrolled) {
-        setIsScrolled(true);
-      } else if (scrollTop === 0 && isScrolled) {
-        setIsScrolled(false);
-      }
-      setIsExtended(window.pageYOffset === 0);
-      setFontSize(window.pageYOffset === 0 ? 8 : 2);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isScrolled]);
-
-  const styles = {
-    appBar: {
-      position: "fixed",
-      height: isExtended ? "40%" : "10%",
-      transition: "height 0.5s",
-      display: "flex",
-      backgroundColor: isScrolled ? "rgba(0, 0, 0, 1)" : "transparent",
-      // backdropFilter:"blur(10px)",
-      border: "0px solid rgb(244,244,247)",
-      borderBottomWidth: "3px",
-      borderTopWidth: "5px",
-      // borderLeftWidth: "1px",
-      // borderRightWidth: "1px",
-      borderRadius: isExtended ? "0px" : "0px 0px 20px 20px",
-      justifyContent: isExtended ? "flex-end" : "flex-start",
-      alignItems: isExtended ? "center" : "flex-start",
-    },
-    titleContainer: {
-      position: "relative",
-      top: isExtended ? "0" : "0",
-      left: isExtended ? "0" : "0",
-      transform: isExtended ? "translateY(0)" : "none",
-      transition: " font-size 0.5s ease-in-out",
-      display: "flex",
-      flexDirection: "row",
-    },
-    title: {
-      fontSize: `${fontSize}rem`,
-      transition: "padding 0.5s linear , font-size 0.5s ease-in-out ",
-      padding: isExtended ? "0px 50px" : "0px 5px",
-    },
-    navLink: {
-      margin: "0 10px",
-      color: "#000000",
-      cursor: "pointer",
-    },
-    navComponent: {
-      top: "1.8%",
-      display: "flex",
-      flexDirection: "row",
-      position: "fixed",
-      width: "100%",
-    },
-    navContainer: {
-      backgroundColor: "#F4F4F7",
-      borderRadius: "5px",
-      padding: "10px 30px 10px",
-      display: "flex",
-
-      justifyContent: "flex-start",
-      marginLeft: isExtended ? "5%" : "17%",
-      transition: "margin-left 0.5s linear",
-      marginRight: "50%",
-      position: "absolute",
-    },
-
-    loginText: {
-      color: "#FFFFFF",
-      fontWeight: "bold",
-      position: "absolute",
-      marginLeft: "85%",
-      padding: "10px",
-    },
-    getStartedButton: {
-      borderRadius: "5px",
-      textTransform: "none",
-      backgroundColor: "#4caf50",
-      color: "#FFFFFF",
-      padding: "10px",
-      position: "absolute",
-      marginLeft: "90%",
-    },
-  };
+    // Simulate loading of the image and other data
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 0);
+  }, []);
 
   return (
     <PageWrapper>
       <CssBaseline />
-      <AppBar style={styles.appBar}>
-        <Toolbar>
-          <div style={styles.titleContainer}>
-            <Typography style={styles.title}>Pitch </Typography>
-            <Typography style={styles.title}>Passes</Typography>
-          </div>
-        </Toolbar>
-        <Box sx={styles.navComponent}>
-          <Box sx={styles.navContainer}>
-            <NavLink style={styles.navLink}>Link 1</NavLink>
-            <NavLink style={styles.navLink}>Link 2</NavLink>
-            <NavLink style={styles.navLink}>Link 3</NavLink>
-            <NavLink style={styles.navLink}>Link 4</NavLink>
-            <NavLink style={styles.navLink}>Link 5</NavLink>
-          </Box>
 
-          <Box>
-            <Typography variant="body1" style={styles.loginText}>
-              <Link href="/auth/signin" color="#FFFFFF" underline="none">
-                Login
-              </Link>
-            </Typography>
-            <Button
-              variant="contained"
-              sx={styles.getStartedButton}
-              disableElevation
+      <Navbar />
+      <MainContent>
+        {isLoaded ? (
+          <>
+            <img
+              src={homapageimg}
+              alt="Landing page image"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: "1",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                textAlign: "center",
+                animation: "fadeIn 1s ease-in 1s forwards",
+              }}
             >
-              <Link href="/auth/signup" color="#FFFFFF" underline="none">
-                Get Started
-              </Link>
-
-              <MovingIcon sx={{ mx: 1 }} />
-            </Button>
-          </Box>
-        </Box>
-      </AppBar>
-      <MainContent style={{ backgroundColor: "#000000" }}>
-        <Content>This is the first page</Content>
+              {/* <h1>Welcome to Our Landing Page</h1> */}
+              {/* <p>This is the first page. Discover the magic of our website!</p> */}
+            </div>
+          </>
+        ) : (
+          <LoaderContainer>
+            <GoldenSnitch />
+          </LoaderContainer>
+        )}
       </MainContent>
-
-      <HorizontalScrollerfirst></HorizontalScrollerfirst>
-
-      {/* <HorizontalScrollersecond /> */}
-
+      <MainContent>
+        <HorizontalScrollerfirst />
+        {/* <HorizontalScrollersecond /> */}
+      </MainContent>
       <MainContent style={{ backgroundColor: "#000000" }}>
         <Content>This is the footer page</Content>
       </MainContent>
