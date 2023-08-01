@@ -44,7 +44,6 @@ useEffect(() => {
     try {
       const response = await axios.get(`http://localhost:3002/users/seatList?matchId=${matchId}`);
       const { booked, unavailable } = response.data;
-      
       setBookedSeats(booked);
       setUnavailableSeats(unavailable);
     } catch (error) {

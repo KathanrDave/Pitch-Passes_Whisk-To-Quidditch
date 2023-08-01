@@ -1,9 +1,10 @@
-  import React, { useEffect, useState } from 'react';
-  import Box from "@mui/material/Box";
-  import styled from "styled-components";
-  import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import Box from "@mui/material/Box";
+import styled from "styled-components";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-  const StyledButton = styled.button`
+const StyledButton = styled.button`
   background-color: #3f51b5;
   color: white;
   padding: 12px 24px;
@@ -18,107 +19,100 @@
     background-color: #283593;
   }
 `;
-  export default function BoxBook({selectedSeats, matchId}) {
-    const Total = 100;
-    const [seatsArray, setSeatsArray] = useState([]);
 
-useEffect(() => {
-  if (typeof selectedSeats === 'object' && selectedSeats !== null) {
-    setSeatsArray(Object.values(selectedSeats));
-  } else {
-    setSeatsArray([]);
-  }
-}, [selectedSeats]);
+export default function BoxBook({ selectedSeats, matchId }) {
+  const email='divypatel0403@gmail.com';
+  const [seatsArray, setSeatsArray] = useState([]);
+  const navigate = useNavigate();
+  console.log(matchId); 
 
+  useEffect(() => {
+    if (typeof selectedSeats === 'object' && selectedSeats !== null) {
+      setSeatsArray(Object.values(selectedSeats));
+    } else {
+      setSeatsArray([]);
+    }
+  }, [selectedSeats]);
 
-    const [totalPrice, setTotalPrice] = useState(0);
-     useEffect(() => {
-    }, [seatsArray,selectedSeats]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  useEffect(() => {
+    setTotalPrice(calculateTotalPrice());
+  }, [seatsArray, selectedSeats]);
+
+  const seatsArrayLength = seatsArray[0] ? seatsArray[0].length : 0;
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    totalPrice=seatsArrayLength*100;
+    return totalPrice;
+  };
+  console.log(seatsArray);
+  const handleBook = (matchId,email,seatsArray) => {
+    // now sending the backend request for the sending data to the backend server for final registering the user 
+    // const response =await axios.put(`http://localhost:3002/setBookingSeat`)
+
+    navigate(`/final-ticket?matchId=${matchId}&email=${email}`);
+  };
   
-    // calculate the total seat price 
-    const calculateTotalPrice = () => {
-      let totalPrice = 0;
-      seatsArray.forEach((seatKey) => {
-        const url=`http://localhost:3002/admin/addseats/checkSeatsPrice?matchId=${matchId}&seatKey=${seatKey}`;
-        axios.get(url).then((response) => {
-        })
-        const seatPrice = selectedSeats[seatKey];
-        totalPrice += seatPrice;
-      });
-      return totalPrice;
-    };
+  // const boxSize = 200 + seatsArray.length * 20;
 
-const seatsArrayLength = seatsArray[0] ? seatsArray[0].length : 0;
-const boxSize = 200 + seatsArray.length * 20;  
-  
   return (
-      <div>
-        <Box
+    <div>
+      <Box
+        sx={{
+          display: "flex",
+          height: '300px',
+          width: "300px",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap", // Add this to enable wrapping
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          border: "1px solid #ccc",
+          fontFamily: "Roboto, sans-serif",
+          borderRadius: "5px",
+          fontWeight: "bold",
+          position: "absolute",
+          bottom: "30px",
+          right: "30px",
+        }}
+      >
+        <div
           sx={{
-            display: "flex",
-            height: `${boxSize}px`,
-          width: `${boxSize}px`,
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: "#f0f0f0",
             padding: "10px",
-            border: "1px solid #ccc",
-            fontFamily: "Roboto, sans-serif",
-            borderRadius: "5px",
-            fontWeight: "bold",
-            position: "absolute",
-            bottom: "50px",
-            right: "50px",
+            backgroundColor: "#66c2ff",
+            color: "#fff",
+            borderRadius: "3px",
+            marginBottom: "10px",
           }}
         >
-          <div
-            sx={{
-              padding: "10px",
-              backgroundColor: "#66c2ff",
-              color: "#fff",
-              borderRadius: "3px",
-              marginBottom: "10px", 
-            }}
-          >
-            No of Tickets: {seatsArrayLength}
-          </div>
-          <div
-            sx={{
-              padding: "10px",
-              backgroundColor: "#66c2ff",
-              color: "#fff",
-              borderRadius: "3px",
-              marginBottom: "10px",
-            }}
-          >
-          Type of Tickets: {selectedSeats.length}
-          </div>
-          
-          <div
-            sx={{
-              padding: "10px",
-              backgroundColor: "#66c2ff",
-              color: "#fff",
-              borderRadius: "3px",
-              marginBottom: "10px",
-            }}
-          >
-            Total: {Total}
-          </div>
-          <div
-  sx={{
-    padding: "10px",
-    backgroundColor: "#66c2ff",
-    color: "#fff",
-    borderRadius: "3px",
-    marginBottom: "10px", 
-  }}
->
-  Seats: {seatsArray.join(", ")}
-</div>          
-          <StyledButton>BOOK NOW</StyledButton>
-        </Box>
-      </div>
-    );
-  }
+          No of Tickets: {seatsArrayLength}
+        </div>
+        <div
+          sx={{
+            padding: "10px",
+            backgroundColor: "#66c2ff",
+            color: "#fff",
+            borderRadius: "3px",  
+            marginBottom: "10px",
+          }}
+        >
+          Total: {totalPrice}
+        </div>
+        <div
+          sx={{
+            padding: "10px",
+            backgroundColor: "#66c2ff",
+            color: "#fff",
+            borderRadius: "3px",
+            marginBottom: "10px",
+          }}
+        >
+          Seats: {seatsArray.join(", ")}
+        </div>
+        <StyledButton  onClick={handleBook}>BOOK NOW</StyledButton>
+      </Box>
+    </div>
+  );
+}

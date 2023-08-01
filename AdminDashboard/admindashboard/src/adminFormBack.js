@@ -1,11 +1,11 @@
 // backend/server.js
 const { MongoClient } = require("mongodb");
+const { ObjectId } = require('mongodb');
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 const User = require("./model/user");
@@ -312,8 +312,27 @@ app.get('/admin/addseats/checkseats', async (req, res) => {
   }
 })
 
+// To get the match Id out of it 
+app.get(`/getMatchName`,async(req,res)=>{
+  try {
+    const matchId=req.query.matchId;
+    const match=await matchData.findOne({ _id: ObjectId(matchId) });
+    if (match) {
+      const matchTitle = match.matchTitle;
+      console.log(matchTitle);
+      res.status(200).json({ matchTitle: matchTitle });
+    } else {
+      res.status(404).json({ error: 'Match not found.' });
+    }
+  } catch (error) {
+    console.error('Error fetching match title:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }}
+)
 
-// To get the list of the seats booked or available by the user
+
+
+// To get the list of the seats booed or available by the user
 app.get(`/users/seatList`,async(req,res)=>{
 try{
  const matchId=req.query.matchId;

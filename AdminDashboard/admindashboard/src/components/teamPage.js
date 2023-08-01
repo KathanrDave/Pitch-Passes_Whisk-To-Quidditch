@@ -8,7 +8,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import './typeWriter.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Roboto } from '@fontsource/roboto';
+
 
 export default function TeamPage() {
 

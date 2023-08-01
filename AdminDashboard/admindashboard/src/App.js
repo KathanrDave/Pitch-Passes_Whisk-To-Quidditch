@@ -13,6 +13,7 @@ import CountdownTimer from './components/countDown';
 import TeamPage from "./components/teamPage";
 import ShowTeamPage from "./components/ShowTeamPage";
 import AddYouTeam  from "./components/addYouTeam";
+import CardComponent from "./components/tickets";
 function App() {
   const targetDateTime = new Date('2023-08-04T19:00:00.000Z').getTime();
 
@@ -22,14 +23,14 @@ function App() {
       <Routes>
           <Route path="/" element={<MatchDisplay />} />
           <Route path="/" element={<AddEvents />} />
-          {/* <Route path="/matchdisplay" element={<MatchDisplay/>}></Route> */}
           <Route path="/booktickets" element={<UserSeatBook />} />
-        <Route path="/admin/addseats" element={<AddSeats/>}/>
+           <Route path="/admin/addseats" element={<AddSeats/>}/>
         <Route path="/comp" element={<MatchComponent/>}></Route>
         <Route path="/user/matches" element={<CountdownTimer targetDateTime={targetDateTime}/>}></Route>
         <Route path="/users" element={<TeamPage/>}></Route>
         <Route path="/showteam" element={<ShowTeamPage/>}></Route>
         <Route path="/addyourteam" element={<AddYouTeam/>}></Route>
+        <Route path="/final-ticket/" element={<CardComponent/>}></Route>
       </Routes>
      
     </div>
