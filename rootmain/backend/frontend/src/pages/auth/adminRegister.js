@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { Box, Link, TextField, Button } from "@mui/material";
+import cuscol from "../../assets/colors";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import axios from "axios";
 
 const App = () => {
@@ -13,8 +13,8 @@ const App = () => {
     lastName: "",
     mobileNumber: "",
     role: "",
-
   });
+ 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +30,15 @@ const App = () => {
     try {
       // Send the form data to the backend API
       console.log(formData);
-      const response = await axios.post("/auth/register/admin", formData);
+      const response = await axios.post(
+        "http://localhost:5000/auth/register/admin",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log(response.data);
 
       // Reset the form data
@@ -42,7 +50,6 @@ const App = () => {
         lastName: "",
         mobileNumber: "",
         role: "",
-  
       });
     } catch (error) {
       console.log(error);
@@ -51,6 +58,21 @@ const App = () => {
 
   return (
     <div>
+      <Button>
+        <Link href="/admin">
+          <ChevronLeftIcon
+            sx={{
+              cursor: "pointer",
+              color: "black",
+              marginRight: "5%",
+              backgroundColor: cuscol.gray400,
+              "&:hover": {
+                backgroundColor: cuscol.gray200,
+              },
+            }}
+          />
+        </Link>
+      </Button>
       <Box
         component="form"
         sx={{

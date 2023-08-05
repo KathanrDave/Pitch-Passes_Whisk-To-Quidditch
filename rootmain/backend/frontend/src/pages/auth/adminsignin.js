@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 import { grey } from "@mui/material/colors";
+import { useCookies } from "react-cookie"; 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Typography,
@@ -17,6 +17,9 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
+import cuscol from "../../assets/colors";
+
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 export default function Signup() {
   // const navigate = useNavigate();
@@ -35,7 +38,7 @@ export default function Signup() {
   const [emailError, setEmailError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [isFormValid, setIsFormValid] = React.useState(false);
-
+  const [cookies, setCookie] = useCookies(["jwtToken"]); 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -96,6 +99,12 @@ export default function Signup() {
               setPasswordError("Invalid password");
             }
           } else {
+            setCookie("jwtToken", data.token, {
+              path: "/",
+              maxAge: 2 * 60 * 60,
+              sameSite: "lax",
+              secure: false,
+            });
             // Redirect to the user profile page upon successful signin
             navigate("/admin");
           }
@@ -112,6 +121,21 @@ export default function Signup() {
       {/* <Typography align="center" variant="h4">
         Sign In Page{" "}
       </Typography> */}
+      <Button>
+        <Link href="/">
+          <ChevronLeftIcon
+            sx={{
+              cursor: "pointer",
+              color: "black",
+              marginRight: "5%",
+              backgroundColor: cuscol.gray400,
+              "&:hover": {
+                backgroundColor: cuscol.gray200,
+              },
+            }}
+          />
+        </Link>
+      </Button>
       <Container component="main">
         <CssBaseline />
         <Box

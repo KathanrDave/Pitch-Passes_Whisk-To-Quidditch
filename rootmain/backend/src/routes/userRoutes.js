@@ -2,14 +2,17 @@ const express = require("express");
 const router = express.Router();
 const authcontroller = require("../controllers/authcontroller");
 const middleware = require("../middlewares/passportmiddleware");
-const isAuthenticated = require("../middlewares/authcheck");
+const isAuthenticated = require("../middlewares/authcheckuser");
 const passport = require("passport");
 
-router.get("/user", (req, res) => {
-  // Since the isAuthenticated middleware already checks for authentication,
-  // you can assume that the user is authenticated at this point.
+router.get("/", isAuthenticated, (req, res) => {
+  // At this point, the req.user object should contain the user data from the JWT token
+  console.log("User Data:", req.user);
   res.json({ message: "Authenticated user", user: req.user });
 });
+
+module.exports = router;
+
 // router.get(
 //   "/user",
 //   passport.authenticate("google", {
@@ -40,5 +43,3 @@ router.get("/user", (req, res) => {
 //     res.status(401).json({ message: "Unauthorized" });
 //   }
 // });
-
-module.exports = router;

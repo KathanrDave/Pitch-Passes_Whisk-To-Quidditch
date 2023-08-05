@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authcontroller = require("../controllers/authcontroller");
 const middleware = require("../middlewares/passportmiddleware");
-const isAuthenticated = require("../middlewares/authcheck");
+const isAuthenticated = require("../middlewares/authcheckuser");
 var jwt = require("jsonwebtoken");
 const passport = require("passport");
 const cors = require("cors");
@@ -61,14 +61,15 @@ router.get("/google/callback", (req, res, next) => {
     if (user) {
       // If the user is available (authenticated via Google), generate the JWT
       const token = generateJWT(user);
-
-      // Include user data in the response along with the JWT token
+      console.log("suer ", user);
       const userData = {
         googleId: user.googleId,
         email: user.email,
+        token: token, // include token here
         // Add any other user data you want to include
       };
-
+      console.log("suedfahjdsfjkar ", userData);
+      // console.log("Token in the routes :", token);
       // Set the JWT token as a cookie in the response
       res.cookie("jwtToken", userData.token, {
         path: "/", // Set the cookie to be accessible from all routes

@@ -45,21 +45,25 @@ const Signup = async (req, res) => {
       email: email,
       password: hashedPassword,
     });
-
+    const payload = {
+      user: {
+        id: user._id,
+        email: user.email,
+      },
+    };
     // Generate a web token
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: "2h",
-      }
-    );
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "2h",
+    });
 
     // Set the HttpOnly cookie in the response
     res.cookie("jwtToken", token, {
-      httpOnly: true,
-      maxAge: 2 * 60 * 60 * 1000, // Cookie expiration time (2 hours in this example)
+      path: "/", // Set the cookie to be accessible from all routes
+      maxAge: 2 * 60 * 60, // Set the cookie expiration time (2 hours in this example)
+      sameSite: "lax", // Set the sameSite attribute for improved security
+      secure: false, // Cookie expiration time (2 hours in this example)
     });
+
     user.password = undefined;
 
     return res.status(201).json({ user, token });
@@ -91,12 +95,23 @@ const Signin = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid password" });
     }
-
+    const payload = {
+      user: {
+        id: user._id,
+        email: user.email,
+      },
+    };
     // Generate a web token if the authentication is successful
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: "2h",
     });
-
+    // Set the HttpOnly cookie in the response
+    res.cookie("jwtToken", token, {
+      path: "/", // Set the cookie to be accessible from all routes
+      maxAge: 2 * 60 * 60, // Set the cookie expiration time (2 hours in this example)
+      sameSite: "lax", // Set the sameSite attribute for improved security
+      secure: false, // Cookie expiration time (2 hours in this example)
+    });
     // Attach the user object and token to the response
     user.token = token;
     user.password = undefined;
@@ -136,12 +151,30 @@ const adminSignin = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
+    const payload = {
+      admin: {
+        id: admin._id,
+        username: admin.username,
+      },
+    };
+    console.log(admin);
     // Generate a web token if the authentication is successful
-    const token = jwt.sign({ id: admin._id }, process.env.SECRET_KEY, {
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: "2h",
     });
+    console.log("TOKEN " + token);
+    // Set the HttpOnly cookie in the response
+    res.cookie("jwtToken", token, {
+      path: "/", // Set the cookie to be accessible from all routes
+      maxAge: 2 * 60 * 60, // Set the cookie expiration time (2 hours in this example)
+      sameSite: "lax", // Set the sameSite attribute for improved security
+      secure: false, // Cookie expiration time (2 hours in this example)
+    });
+    console.log("Cookies:", req.cookies);
+    const jwtToken = req.cookies.jwtToken;
+    console.log("jwtToken:", jwtToken);
 
-    // Attach the user object and token to the response
+    // Attach the admin object and token to the response
     admin.token = token;
     admin.password = undefined;
 
@@ -192,7 +225,7 @@ const adminRegister = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create a new admin
-      const newAdmin = new Admin({
+      const admin = await Admin.create({
         email,
         username,
         password: hashedPassword,
@@ -203,21 +236,31 @@ const adminRegister = async (req, res) => {
       });
 
       // Save the admin to the database
-      await newAdmin.save();
-    }
-    // Send the token as a response (assuming you want to generate a token for admin registration too)
-    const token = jwt.sign({ id: newAdmin._id }, SECRET_KEY, {
-      expiresIn: "2h",
-    });
+      await admin.save();
+      // Send the token as a response (assuming you want to generate a token for admin registration too)
 
-    return res
-      .cookie("jwtToken", token, {
-        httpOnly: true,
-        maxAge: 2 * 60 * 60 * 1000, // Cookie expiration time (2 hours in this example)
-      })
-      .json({ message: "Admin registered successfully", token });
+      const payload = {
+        admin: {
+          id: admin._id,
+          username: admin.username,
+        },
+      };
+      // Generate a web token if the authentication is successful
+      const token = jwt.sign(payload, process.env.SECRET_KEY, {
+        expiresIn: "2h",
+      });
+
+      return res
+        .cookie("jwtToken", token, {
+          path: "/", // Set the cookie to be accessible from all routes
+          maxAge: 2 * 60 * 60, // Set the cookie expiration time (2 hours in this example)
+          sameSite: "lax", // Set the sameSite attribute for improved security
+          secure: false, // Cookie expiration time (2 hours in this example)
+        })
+        .json({ message: "Admin registered successfully", token, admin });
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Error during admin registration:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

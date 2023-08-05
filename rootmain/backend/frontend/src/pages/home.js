@@ -18,6 +18,7 @@ import snitch from "./teamimages/snitch.jpeg";
 import Navbar from "../components/navbarHome";
 // import Navbar from "../components/navbar";
 // import cuscol from "../assets/colors";
+// const jwt = require("jsonwebtoken");
 
 const Content = styled("div")({
   margin: "0 auto",
@@ -35,7 +36,7 @@ const MainContent = styled("div")({
   height: "100vh", // Each section will have a height of 100vh
   display: "flex",
   zIndex: "1000",
-  flexDirection: "rowe",
+  flexDirection: "column",
   justifyContent: "center",
 });
 
@@ -70,8 +71,10 @@ const GoldenSnitch = styled("div")({
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
     // Simulate loading of the image and other data
+
     setTimeout(() => {
       setIsLoaded(true);
     }, 0);
@@ -114,8 +117,27 @@ const Home = () => {
         )}
       </MainContent>
       <MainContent>
+        {/* Add the component or content you want above HorizontalScrollerfirst */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center", // Center horizontally
+            justifyContent: "center", // Center vertically
+            width: "100%",
+            backgroundColor: "black",
+            color: "#f6f2e8",
+            padding: "10px 20px",
+            zIndex: 1,
+            minHeight: "20%",
+          }}
+        >
+          <Typography variant="h3">
+            Explore Quidditch matches to watch
+          </Typography>
+          {/* Add more content if needed */}
+        </Box>
         <HorizontalScrollerfirst />
-        {/* <HorizontalScrollersecond /> */}
       </MainContent>
       <MainContent style={{ backgroundColor: "#000000" }}>
         <Content>This is the footer page</Content>

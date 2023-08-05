@@ -158,7 +158,7 @@ const setunavailable = async (req, res) => {
 };
 
 // Update the match show bar
-const updaterecords = async (req, res) => {
+const matchupdaterecords = async (req, res) => {
   try {
     const matchId = req.query.matchId;
     const venue = req.body.venue;
@@ -190,5 +190,5 @@ module.exports = {
   createseats,
   checkseats,
   setunavailable,
-  updaterecords
+  matchupdaterecords
 };

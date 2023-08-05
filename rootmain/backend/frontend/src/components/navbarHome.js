@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import MovingIcon from "@mui/icons-material/ArrowCircleRightOutlined";
-import { AppBar, Toolbar, Typography, Button, Box, Link } from "@mui/material";
-
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Link,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import logo from "../pages/teamimages/logo.png";
 import cuscol from "../assets/colors";
+import logout from "./dologout.js";
+import { Cookies } from "react-cookie";
 
 const NavLink = styled("span")({
   margin: "0 10px",
@@ -16,7 +28,32 @@ const Navbar = () => {
   const [isExtended, setIsExtended] = useState(true);
   const [fontSize, setFontSize] = useState(8);
   const [isScrolled, setIsScrolled] = useState(true);
+  const [isToken, setIsToken] = useState(false);
+  const { handleLogout } = logout();
+  // State for user profile menu
+  const [anchorEl, setAnchorEl] = useState(null);
 
+  const handleProfileMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    const cookies = new Cookies();
+    const token = cookies.get("jwtToken");
+    console.log(token);
+
+    if (token) {
+      setIsToken(true);
+    } else {
+      console.log("No token found. User not authorized.");
+    }
+
+    // Rest of your code...
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -85,6 +122,22 @@ const Navbar = () => {
       position: "fixed",
       width: "100%",
     },
+    userprofile: {
+      position: "absolute",
+      marginLeft: "95%",
+      backgroundColor: cuscol.enchantedTeal,
+      borderRadius: 50,
+      width: "50px",
+      height: "50px",
+    },
+    userbutton: {
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 50,
+      width: "50px",
+      height: "50px",
+      right: "5px",
+    },
     navContainer: {
       backgroundColor: "#F4F4F7",
       borderRadius: "5px",
@@ -113,7 +166,7 @@ const Navbar = () => {
       borderRadius: "5px",
       textTransform: "none",
       backgroundColor: cuscol.enchantedTeal,
-      color: "white",
+      color: "black",
       padding: "10px",
       position: "absolute",
       marginLeft: "90%",
@@ -148,24 +201,54 @@ const Navbar = () => {
           <NavLink style={styles.navLink}>Link 5</NavLink>
         </Box>
 
-        <Box>
-          <Typography variant="body1" style={styles.loginText}>
-            <Link href="/auth/signin" color="#FFFFFF" underline="none">
-              Login
-            </Link>
-          </Typography>
-          <Button
-            variant="contained"
-            sx={styles.getStartedButton}
-            // disableElevation
-          >
-            <Link href="/auth/signup" color="#FFFFFF" underline="none">
-              Get Started
-            </Link>
+        {isToken ? (
+          <Box sx={styles.userprofile}>
+            {/* User Profile Icon */}
+            <Button
+              aria-controls="user-profile-menu"
+              aria-haspopup="true"
+              onClick={handleProfileMenuClick}
+              color="inherit"
+              sx={styles.userbutton}
+            >
+              <AccountCircleIcon fontSize="large" />
+            </Button>
+            {/* User Profile Menu */}
+            <Menu
+              id="user-profile-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleProfileMenuClose}
+            >
+              <MenuItem onClick={handleProfileMenuClose}>User Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </Box>
+        ) : (
+          <Box>
+            <Typography variant="body1" style={styles.loginText}>
+              <Link href="/auth/signin" color="#FFFFFF" underline="none">
+                Login
+              </Link>
+            </Typography>
+            <Button
+              variant="contained"
+              sx={styles.getStartedButton}
+              // disableElevation
+            >
+              <Link
+                href="/auth/signup"
+                color="black"
+                underline="none"
+              >
+                Get Started
+              </Link>
 
-            <MovingIcon sx={{ mx: 1 }} />
-          </Button>
-        </Box>
+              <MovingIcon sx={{ mx: 1 }} />
+            </Button>
+          </Box>
+        )}
       </Box>
     </AppBar>
   );

@@ -127,7 +127,7 @@ export default function MatchComponent({ showData }) {
     // Send updated match data to the server
     // console.log(matchData);
     axios
-      .put(`http://localhost:3002/admin/updaterecords?matchId=${id}`, matchData)
+      .put(`http://localhost:5000/admin/match/updaterecords?matchId=${id}`, matchData)
       .then((response) => {
         console.log("Match data updated successfully:", response.data);
       })

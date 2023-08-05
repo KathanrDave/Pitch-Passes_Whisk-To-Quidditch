@@ -16,38 +16,21 @@ const useAuth = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const checkAuth = async () => {
       try {
-        // Fetch user data using the stored token
-        const token = cookies.jwtToken; // Get the JWT token from cookies
-
+        const token = cookies.jwtToken;
         if (token) {
-          const response = await fetch("http://localhost:5000/user", {
-            headers: {
-              Authorization: `Bearer ${token}`, // Attach the JWT token as an Authorization header
-            },
-            credentials: "include", // Include credentials (cookies) with the request
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setUserData(data);
-          } else {
-            // Handle the case when the user is not authenticated through either JWT or Google
-            console.log("User is not authenticated.");
-            setDialogOpen(true); // Show the dialog if the user is not authenticated
-          }
+          console.log("User authenticated.");
         } else {
-          // Handle the case when the user is not authenticated through either JWT or Google
           console.log("User is not authenticated.");
-          setDialogOpen(true); // Show the dialog if the user is not authenticated
+          setDialogOpen(true);
         }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchUserData();
+    checkAuth();
   }, [cookies]);
 
   // Function to handle dialog close event
@@ -73,7 +56,7 @@ const useAuth = () => {
     </Dialog>
   );
 
-  return { userData, dialogBox };
+  return { dialogBox };
 };
 
 export default useAuth;

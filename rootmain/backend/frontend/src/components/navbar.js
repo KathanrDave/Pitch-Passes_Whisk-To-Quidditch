@@ -11,6 +11,8 @@ const NavLink = styled("span")({
 });
 
 const Navbar = () => {
+ 
+
   const styles = {
     appBar: {
       position: "fixed",
@@ -19,12 +21,12 @@ const Navbar = () => {
       display: "flex",
       backgroundColor: "rgb(255,255,255,0.1)",
       backdropFilter: "blur(10px)",
-    //   border: "0px solid rgb(255,255,255,0.3)",
+      //   border: "0px solid rgb(255,255,255,0.3)",
       borderBottomWidth: "3px",
       borderTopWidth: "5px",
 
       borderRadius: "0px 0px 20px 20px",
-    //   borderColor: "rgb(255,255,255,0.3)",
+      //   borderColor: "rgb(255,255,255,0.3)",
       borderTop: "none",
       justifyContent: "center",
       alignItems: "flex-start",

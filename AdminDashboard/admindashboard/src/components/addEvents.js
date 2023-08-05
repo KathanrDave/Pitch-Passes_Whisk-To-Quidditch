@@ -17,7 +17,7 @@ export default function AddEvents() {
         <Button variant="contained" type="submit" onClick={handleAddEventsClick}>
           Add Events
         </Button>
-      )}
+      )}       
     </Box>
   );
 }
