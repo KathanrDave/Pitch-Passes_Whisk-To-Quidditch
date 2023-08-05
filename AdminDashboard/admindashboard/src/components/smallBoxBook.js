@@ -21,10 +21,11 @@ const StyledButton = styled.button`
 `;
 
 export default function BoxBook({ selectedSeats, matchId }) {
-  const email='divypatel0403@gmail.com';
+
+  const email='divypatel@gmail.com';
   const [seatsArray, setSeatsArray] = useState([]);
   const navigate = useNavigate();
-  console.log(matchId); 
+  // console.log(matchId); 
 
   useEffect(() => {
     if (typeof selectedSeats === 'object' && selectedSeats !== null) {
@@ -46,10 +47,28 @@ export default function BoxBook({ selectedSeats, matchId }) {
     totalPrice=seatsArrayLength*100;
     return totalPrice;
   };
-  console.log(seatsArray);
-  const handleBook = (matchId,email,seatsArray) => {
+
+  console.log(seatsArray);  
+  
+  const handleBook = async() => {
     // now sending the backend request for the sending data to the backend server for final registering the user 
-    // const response =await axios.put(`http://localhost:3002/setBookingSeat`)
+     try{
+      const postUrl=`http://localhost:3002/setBookingSeat?matchId=${matchId}&email=${email}`;     
+      const Seats={seatsId:seatsArray,}
+      const response =await axios.post(postUrl,Seats);
+      console.log(response.data);
+     }catch(err){
+      console.log(err);
+     }
+     try{
+    const putUrl = `http://localhost:3002/updateBookingSeat?matchId=${matchId}`;
+    const Seats={seatsId:seatsArray,}
+    const newresponse=await axios.put(putUrl,Seats);
+    console.log(newresponse.data);
+     }catch(err)
+     {
+      console.log(err);
+     }
 
     navigate(`/final-ticket?matchId=${matchId}&email=${email}`);
   };

@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect, useState} from "react";
 import { styled } from "@mui/system";
 import { useLocation} from 'react-router-dom';
 import axios from "axios";
@@ -149,36 +149,43 @@ const Barcode = styled("div")({
               81px 0 0 1px ${Black}`
 });
 
-const CardComponent = () => {
+const CardComponent = (req,res) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const matchId=queryParams.get('matchId');
-  const email=queryParams.get('email');
-  const seatsArray=queryParams.get('seatsArray');
-  console.log(seatsArray);
-  if (Array.isArray(seatsArray)) {
-    // Array is valid, you can use join safely.
-    const joinedSeats = seatsArray.join(', ');
-    console.log(joinedSeats);
-  } else {
-    console.error('seatsArray is not a valid array:', seatsArray);
-  }
-  // Check if matchId exists before fetching the data
-  useEffect(() => {
-    if (matchId) {
-      fetchData(matchId);
-    }
-  }, [matchId]);
+  const matchId = queryParams.get('matchId');
+  const email = queryParams.get('email');
 
-  const fetchData = async (matchId) => {
+  // console.log(matchId, email);
+  const [matchData,setMatchData] = useState({});
+    // console.log(matchId, email);
+  const fetchData = async ({matchId, email}) => {
     try {
-      const response = await axios.get(`http://localhost:3002/getMatchName?matchId=${matchId}`);
-      const matchName = response.data;
-      console.log(matchName);
-    } catch (error) {
+      console.log('Get',matchId, email);
+      const response = await axios.get(`http://localhost:3002/getDetails?matchId=${matchId}&email=${email}`);
+      setMatchData(response.data);
+      console.log(response.data); 
+        } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+  useEffect(() => {
+    console.log('Fetching data');
+    if (matchId && email) {
+      fetchData({matchId,email});
+    }
+  }, [matchId,email]);
+console.log(matchData);
+
+  // if (Array.isArray(seatsArray)) {
+  //   // Array is valid, you can use join safely.
+  //   const joinedSeats = seatsArray[0].join(', ');
+  //   console.log(joinedSeats);
+  // } else {
+  //   console.error('seatsArray is not a valid array:', seatsArray);
+  // }
+  // Check if matchId exists before fetching the data
+  const SeatsArray=matchData.seats ? matchData.seats.join(','):''; 
+  
   return (
     <CardWrap>
       <Card>
@@ -186,15 +193,12 @@ const CardComponent = () => {
           Quiditch <span>Game</span>
         </H1>
         <Title>
-          <h2>How I met your Mother</h2>
+          <h2>{matchData.matchTitle}</h2>
           <span>Sports</span>
         </Title>
-        <Name>
-          <h2>Vladimir Kudinov</h2>
-          <span>name</span>
-        </Name>
+        
         <Seat>
-          <h2>Seat : {seatsArray.join(", ")}</h2> 
+          <h2>Seat : {SeatsArray}</h2> 
         </Seat>
         <Time>
           <h2>12:00</h2>

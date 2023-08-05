@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const bodyParser = require('body-parser');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const app = express();
@@ -14,6 +15,7 @@ const Seat=require("./model/seatModel");
 const matchData = require("./model/matchModel");
 const Player=require("./model/teamPlayer");
 const Tower=require("./model/towerModel");
+const Booking=require("./model/bookingModel");
 const cors = require("cors");
 
 // Enable CORS for all routes
@@ -21,6 +23,7 @@ app.use(cors());
 
 // Middleware
 app.use(express.json());
+app.use(bodyParser.json());
 
 main().catch((err) => console.log(err));
 
@@ -313,22 +316,37 @@ app.get('/admin/addseats/checkseats', async (req, res) => {
 })
 
 // To get the match Id out of it 
-app.get(`/getMatchName`,async(req,res)=>{
+app.get(`/getDetails`,async(req,res)=>{
   try {
-    const matchId=req.query.matchId;
-    const match=await matchData.findOne({ _id: ObjectId(matchId) });
-    if (match) {
-      const matchTitle = match.matchTitle;
-      console.log(matchTitle);
-      res.status(200).json({ matchTitle: matchTitle });
-    } else {
+    const matchId = req.query.matchId;
+    // const customerId = new mongoose.Types.ObjectId(matchId);
+    const customerEmail = req.query.email; 
+    console.log('Backend',customerEmail,matchId)
+    // console.log('Reached')
+    const customerDetails= await Booking.findOne({ matchId: matchId, customerEmail });
+      // console.log(customerDetails);
+      
+    const matchDetails=await matchData.findOne({_id:matchId});
+    // console.log(matchDetails);
+     if (customerDetails && matchDetails) {
+      const TicketData={
+        matchTitle:matchDetails.matchTitle,
+        matchTime:matchDetails.dateTime.time,
+        matchDate:matchDetails.dateTime.date,
+        seats:customerDetails.seatId,
+      }
+      console.log(TicketData);
+      res.status(200).json(TicketData);          
+      }
+     else {
       res.status(404).json({ error: 'Match not found.' });
     }
-  } catch (error) {
+    }
+  catch (error) {
     console.error('Error fetching match title:', error);
     res.status(500).json({ error: 'Internal server error.' });
-  }}
-)
+  }
+});
 
 
 
@@ -381,8 +399,59 @@ app.put(`/admin/addseats/setunavailable`, async (req, res) => {
   }
 });
 
+app.post('/setBookingSeat', async (req, res) => {
+  try {
+    const matchId = req.query.matchId;
+    const email = req.query.email;
+    const  seatsArray  = req.body.seatsId;
+    console.log(matchId, email);
+    console.log(seatsArray);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0,10);
+    console.log(currentDate);
+    const data = new Booking({
+      seatId: seatsArray,
+      matchId: matchId,
+      customerEmail: email,
+      bookingDate: formattedDate,
+      bookingStatus: 'Amount Paid By the User',
+    });
+    console.log(data);
+    await data.save();
+    console.log('Data Sent Successfully');
+    res.status(200).send('Data Sent Successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while processing the request');
+  }
+});
 
 
+app.put('/updateBookingSeat', async (req, res) => {
+  try {
+    const matchId = req.query.matchId;
+    const bookedSeats = req.body.seatsId;
+    
+    console.log(matchId,bookedSeats);
+
+    const existingMatch= await Tower.findOne({ matchId: matchId });
+    if (existingMatch) {
+      console.log('Match found:', existingMatch);
+      for(let i=0; i<bookedSeats[0].length; i++) {
+        existingMatch.bookedSeats.push(bookedSeats[0][i]);
+      }
+      await existingMatch.save();
+      console.log('Seats added successfully');
+      res.status(200).send('Seats added successfully');
+    } else {
+      console.log('Match not found');
+      res.status(404).send('Match not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while processing the request');
+  }
+});
 
 // Update the match show bar
 app.put(`/admin/updaterecords`, async (req, res) => {
