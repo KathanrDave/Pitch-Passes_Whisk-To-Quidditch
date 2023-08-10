@@ -351,20 +351,30 @@ app.get(`/getDetails`,async(req,res)=>{
 
 
 // To get the list of the seats booed or available by the user
-app.get(`/users/seatList`,async(req,res)=>{
-try{
- const matchId=req.query.matchId;
- const data=await Tower.findOne({matchId:matchId});
- if(!data){
-return res.status(404).json({message:`Match Not Found`});
- }
- res.status(200).json({ booked: data.bookedSeats, unavailable: data.unavailableSeats });
-}catch(error){
-  console.error('Error fetching data:', error);
-  res.status(500).json({ message: 'Server error' });
-}
-})
-
+app.get(`/users/seatList`, async (req, res) => {
+  try {
+    const matchId = req.query.matchId;
+    const data = await Tower.findOne({ matchId: matchId });
+    
+    if (!data) {
+      const newTower = new Tower({
+        matchId: matchId,
+        bookedSeats: [],
+        unavailableSeats: [],
+      });
+      
+      const savedSeat = await newTower.save();
+      console.log(savedSeat);
+      
+      return res.status(404).json({ message: `Match Not Found` });
+    }
+    
+    res.status(200).json({ booked: data.bookedSeats, unavailable: data.unavailableSeats });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // to make the seats unavailable 
 app.put(`/admin/addseats/setunavailable`, async (req, res) => {

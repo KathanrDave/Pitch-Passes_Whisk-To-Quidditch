@@ -155,7 +155,7 @@ const CardComponent = (req,res) => {
   const matchId = queryParams.get('matchId');
   const email = queryParams.get('email');
 
-  // console.log(matchId, email);
+  // console.log(matchId,rt  email);
   const [matchData,setMatchData] = useState({});
     // console.log(matchId, email);
   const fetchData = async ({matchId, email}) => {

@@ -14,27 +14,108 @@ import TeamPage from "./components/teamPage";
 import ShowTeamPage from "./components/ShowTeamPage";
 import AddYouTeam  from "./components/addYouTeam";
 import CardComponent from "./components/tickets";
+import ConfirmationBox from "./components/confirmationBox";
+import ErrorBoundary from "./components/errorBoundary";
 function App() {
   const targetDateTime = new Date('2023-08-04T19:00:00.000Z').getTime();
-
   return (
-    
     <div className="App">
-      <Routes>
-          <Route path="/" element={<MatchDisplay />} />
-          <Route path="/" element={<AddEvents />} />
-          <Route path="/booktickets" element={<UserSeatBook />} />
-           <Route path="/admin/addseats" element={<AddSeats/>}/>
-        <Route path="/comp" element={<MatchComponent/>}></Route>
-        <Route path="/user/matches" element={<CountdownTimer targetDateTime={targetDateTime}/>}></Route>
-        <Route path="/users" element={<TeamPage/>}></Route>
-        <Route path="/showteam" element={<ShowTeamPage/>}></Route>
-        <Route path="/addyourteam" element={<AddYouTeam/>}></Route>
-        <Route path="/final-ticket/" element={<CardComponent/>}></Route>
-      </Routes>
-     
+              <Routes>
+          <Route
+            path="/"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary >
+                <MatchDisplay />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/events"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <AddEvents />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/booktickets"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <UserSeatBook />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/admin/addseats"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <AddSeats />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/comp"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <MatchComponent />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/user/matches"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <CountdownTimer targetDateTime={targetDateTime} />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/users"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <TeamPage />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/showteam"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <ShowTeamPage />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/addyourteam"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <AddYouTeam />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/final-ticket/"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <CardComponent />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/confirmBox"
+            element={ // Wrap each route with ErrorBoundary
+              <ErrorBoundary>
+                <ConfirmationBox />
+              </ErrorBoundary>
+            }
+          />
+        </Routes>
+      
     </div>
   );
 }
 
-export default App; 
+export default App;
+
+
+

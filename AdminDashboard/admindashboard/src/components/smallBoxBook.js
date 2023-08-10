@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import {createPortal} from 'react-dom';
 import Box from "@mui/material/Box";
 import styled from "styled-components";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import ConfirmationBox from './confirmationBox';
 const StyledButton = styled.button`
   background-color: #3f51b5;
   color: white;
@@ -24,8 +25,9 @@ export default function BoxBook({ selectedSeats, matchId }) {
 
   const email='divypatel@gmail.com';
   const [seatsArray, setSeatsArray] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
   const navigate = useNavigate();
-  // console.log(matchId); 
 
   useEffect(() => {
     if (typeof selectedSeats === 'object' && selectedSeats !== null) {
@@ -48,11 +50,10 @@ export default function BoxBook({ selectedSeats, matchId }) {
     return totalPrice;
   };
 
-  console.log(seatsArray);  
-  
-  const handleBook = async() => {
-    // now sending the backend request for the sending data to the backend server for final registering the user 
-     try{
+  // console.log(seatsArray);  
+  const handleConfirm =async()=>{
+    setShowModal(false);
+    try{
       const postUrl=`http://localhost:3002/setBookingSeat?matchId=${matchId}&email=${email}`;     
       const Seats={seatsId:seatsArray,}
       const response =await axios.post(postUrl,Seats);
@@ -69,12 +70,14 @@ export default function BoxBook({ selectedSeats, matchId }) {
      {
       console.log(err);
      }
-
-    navigate(`/final-ticket?matchId=${matchId}&email=${email}`);
+     console.log("Get :",showModal);
+    if(showModal)
+    {navigate(`/final-ticket?matchId=${matchId}&email=${email}`);}
+  }
+  const handleBook = async() => {
+    setShowModal(true);
+    console.log(showModal);
   };
-  
-  // const boxSize = 200 + seatsArray.length * 20;
-
   return (
     <div>
       <Box
@@ -131,6 +134,7 @@ export default function BoxBook({ selectedSeats, matchId }) {
           Seats: {seatsArray.join(", ")}
         </div>
         <StyledButton  onClick={handleBook}>BOOK NOW</StyledButton>
+        {showModal && createPortal(<ConfirmationBox onConfirm={handleConfirm}/>,document.getElementById('another-root'))}
       </Box>
     </div>
   );

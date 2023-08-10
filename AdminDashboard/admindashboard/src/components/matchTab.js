@@ -73,6 +73,7 @@ export default function MatchComponent({ showData }) {
   // Handle input changes and update state
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log(value);
     setMatchData((prevData) => ({ ...prevData, [name]: value }));
   };
   const handleKeyDown = (event) => {
@@ -94,6 +95,7 @@ export default function MatchComponent({ showData }) {
         console.error("Error updating match data:", error);
       });
   };
+  
 
   return (
     <Box
