@@ -16,7 +16,7 @@ const SeatingMap = ({ seatDataCallback, matchId }) => {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    margin: "10px 10px",
+    margin: "15px 15px",
   };
   const rowStyle = {
     display: "flex",
@@ -25,8 +25,9 @@ const SeatingMap = ({ seatDataCallback, matchId }) => {
     width: "20px",
     height: "20px",
     backgroundColor: "lightgray",
-    border: "1px solid gray",
+    border: "1px solid",
     margin: "0 1px 1px 0",
+    
   };
 
 const generateSeatKey = (matrixIndex, rowIndex, colIndex) => {

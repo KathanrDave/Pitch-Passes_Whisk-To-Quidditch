@@ -28,19 +28,23 @@ const Seat = ({ user, seatKey, statusPromise, onSelect, checkselect}) => {
   };
 
   const seatStyle = {
-    width: '17px',
-    height: '17px',
-    backgroundColor: status === 'booked' ?'lightyellow' : selected ? 'skyblue' : status === 'unavailable' ? 'darkgray' : 'lightgray',
+    width: '25px',
+    height: '25px',
+    backgroundColor: status === 'booked' ? 'lightyellow' : selected ? 'skyblue' : status === 'unavailable' ? 'darkgray' : 'lightgray',
     border: '1px solid gray',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: status==='booked' || status === 'unavailable' ? 'not-allowed' : 'pointer',
+    cursor: status === 'booked' || status === 'unavailable' ? 'not-allowed' : 'pointer',
     borderRadius: '4px',
+    fontWeight: 'bold',
+    fontSize: '14px',
+    margin: '2px',
+    fontFamily: 'Poppins',
   };
-
+  
   return (
-    <div style={seatStyle} onClick={handleClick} disabled={status === 'booked' || status === 'unavailable'}></div>
+    <div style={seatStyle} onClick={handleClick} disabled={status === 'booked' || status === 'unavailable'}>{seatKey}</div>
   );
 };
 

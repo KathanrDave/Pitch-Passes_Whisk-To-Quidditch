@@ -74,6 +74,9 @@ export default function BoxBook({ selectedSeats, matchId }) {
     if(showModal)
     {navigate(`/final-ticket?matchId=${matchId}&email=${email}`);}
   }
+  const handleClose = async ()=>{
+    setShowModal(true);
+  }
   const handleBook = async() => {
     setShowModal(true);
     console.log(showModal);
@@ -134,7 +137,7 @@ export default function BoxBook({ selectedSeats, matchId }) {
           Seats: {seatsArray.join(", ")}
         </div>
         <StyledButton  onClick={handleBook}>BOOK NOW</StyledButton>
-        {showModal && createPortal(<ConfirmationBox onConfirm={handleConfirm}/>,document.getElementById('another-root'))}
+        {showModal && createPortal(<ConfirmationBox onConfirm={handleConfirm} onClose={handleClose}/>,document.getElementById('another-root'))}
       </Box>
     </div>
   );

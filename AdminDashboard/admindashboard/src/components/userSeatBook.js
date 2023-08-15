@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SeatingMap from "./seatRow";
 import BoxBook from "./smallBoxBook";
 import { useLocation } from 'react-router-dom';
+import SeatInfo from "./seatInfo";
 export default function UserSeatBook() {
 
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function UserSeatBook() {
     <div>
      <SeatingMap seatDataCallback={handleChange} matchId={matchId} />
       <BoxBook  selectedSeats={seatData} matchId={matchId} />
+      <SeatInfo></SeatInfo>
     </div>
   );
 }
